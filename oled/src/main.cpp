@@ -33,7 +33,7 @@ int main(void)
     HSE_SysClock();
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
-    // std::vector<uint32_t> gpioRccs(2);
+    
     SPI::SoftInitStruct oledSoft;
 
     oledSoft.CS_Pin = GPIO_Pin_5;

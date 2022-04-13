@@ -24,7 +24,8 @@ namespace SPI
         // uint32_t DC_RCC, CS_RCC, RES_RCC, SCLK_RCC, MOSI_RCC;
         // vector<uint32_t>* GPIO_RCCs;
         uint8_t Spi_Num;
-        uint8_t SCLK_PinSource, MOSI_PinSource, SCLK_AF, MOSI_AF;
+        // uint8_t SCLK_PinSource, MOSI_PinSource;
+        uint8_t SCLK_AF, MOSI_AF;
     } HardInitStruct;
 
     class SPI_Object
@@ -40,8 +41,8 @@ namespace SPI
 
     public:
         SPI_Object(/* args */) = default;
-        SPI_Object(HardInitStruct *h);
-        SPI_Object(SoftInitStruct *s);
+        SPI_Object(HardInitStruct *h) { init(h); };
+        SPI_Object(SoftInitStruct *s) { init(s); };
 
         ~SPI_Object();
     };

@@ -2,26 +2,38 @@
 
 using namespace SPI;
 
-// SPI_Object::SPI_Object(/* args */) {}
-
-SPI_Object::SPI_Object(HardInitStruct *h) { init(h); }
-SPI_Object::SPI_Object(SoftInitStruct *s) { init(s); }
-
 SPI_Object::~SPI_Object() {}
+
+uint8_t pin2pinSource(uint16_t pin)
+{
+    uint8_t result = 0;
+    while (pin != 1)
+    {
+        pin /= 2;
+        result++;
+    }
+    return result;
+}
 
 void SPI_Object::init(HardInitStruct *hard)
 {
     GPIO_InitTypeDef gpio;
     SPI_InitTypeDef spi;
-    if (hard->Spi_Num == 1)
+    
+    switch (hard->Spi_Num)
     {
+    case 1:
         RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
         this->spi = SPI1;
-    }
-    if (hard->Spi_Num == 2)
-    {
+        break;
+    case 2:
         RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2, ENABLE);
         this->spi = SPI2;
+        break;
+
+    default:
+        return;
+        break;
     }
 
     gpio.GPIO_Mode = GPIO_Mode_Out_PP;
@@ -40,8 +52,11 @@ void SPI_Object::init(HardInitStruct *hard)
     gpio.GPIO_Pin = hard->SCLK_Pin;
     GPIO_Init(hard->SCLK_Port, &gpio);
 
-    GPIO_PinAFConfig(hard->SCLK_Port, hard->SCLK_PinSource, hard->SCLK_AF);
-    GPIO_PinAFConfig(hard->MOSI_Port, hard->MOSI_PinSource, hard->MOSI_AF);
+    uint8_t SCLK_PinSource = pin2pinSource(SCLK_Pin);
+    uint8_t MOSI_PinSource = pin2pinSource(MOSI_Pin);
+
+    GPIO_PinAFConfig(hard->SCLK_Port, SCLK_PinSource, hard->SCLK_AF);
+    GPIO_PinAFConfig(hard->MOSI_Port, MOSI_PinSource, hard->MOSI_AF);
 
     spi.SPI_NSS = SPI_NSS_Soft;
     spi.SPI_Mode = SPI_Mode_Master;
