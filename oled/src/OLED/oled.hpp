@@ -36,7 +36,10 @@ namespace OLED
         void reset(void);
         void clear(void);
         void Picture_display(uint8_t *ptr_pic, uint8_t colStart, uint8_t pageStart, uint8_t line, uint8_t col);
+        void Picture_display(const uint8_t *ptr_pic, uint8_t colStart, uint8_t pageStart, uint8_t line, uint8_t col);
         void Screen_FillClear(uint8_t filler);
+        void reverse(bool on);
+        void setBrightness(uint8_t val);
     };
 }
 #endif /* __WY_LIB_CPP_OLED_H__ */

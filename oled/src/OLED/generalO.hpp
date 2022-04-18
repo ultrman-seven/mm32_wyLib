@@ -16,7 +16,7 @@ namespace genO
 
     private:
     public:
-        class ChooseLine
+        class// ChooseLine
         {
         private:
             char val = -1;
@@ -24,7 +24,7 @@ namespace genO
 
         public:
             void setStep(uint8_t step) { this->step = step; };
-            ChooseLine() = default;
+            //ChooseLine() = default;
             bool operator==(uint8_t v) { return this->val == v; }
             bool operator!=(uint8_t v) { return this->val != v; }
             void operator++(void) { this->val += this->step; }

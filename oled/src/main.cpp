@@ -3,6 +3,9 @@
 #include "wy_spi.hpp"
 #include "font.hpp"
 #include <stdio.h>
+// extern const uint8_t qe_gif[][1024];
+// extern const uint8_t mao_gif[][1024];
+extern const uint8_t a_gif[][1024];
 
 ErrorStatus HSE_SysClock(void)
 {
@@ -33,7 +36,7 @@ int main(void)
     HSE_SysClock();
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
-    
+
     SPI::SoftInitStruct oledSoft;
 
     oledSoft.CS_Pin = GPIO_Pin_5;
@@ -54,10 +57,22 @@ int main(void)
     screen.setScreenSize(128, 64); //设置屏幕分辨率
     screen.clear();
     screen.print("hello world!\n");
-    // sprintf(screen.str, "hello world %d !", 10);
-    // screen.printStr();
+    // screen.reverse(true);
+    //screen.setBrightness(0);
     while (1)
     {
+        int i = 0;
+        while (i < 20)
+        {
+            screen.Picture_display(a_gif[i++], 0, 0, 64, 128);
+            delayMs(100);
+        }
+        // i = 0;
+        // while (i < 45)
+        // {
+        //     screen.Picture_display(mao_gif[i++], 0, 0, 64, 128);
+        //     delayMs(40);
+        // }
     }
 
     return 0;
