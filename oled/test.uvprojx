@@ -548,6 +548,11 @@
               <FileType>8</FileType>
               <FilePath>.\src\WyCppHal\src\wy_spi.cpp</FilePath>
             </File>
+            <File>
+              <FileName>wy_uart.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\WyCppHal\src\wy_uart.cpp</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
