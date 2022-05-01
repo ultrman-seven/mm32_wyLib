@@ -4,10 +4,12 @@
 #include "wy_uart.hpp"
 #include "font.hpp"
 #include <stdio.h>
+#include <vector>
+
 // extern const uint8_t qe_gif[][1024];
 // extern const uint8_t mao_gif[][1024];
 extern const uint8_t a_gif[][1024];
-// extern OLED::OLED_Object *s = nullptr;
+OLED::OLED_Object *s = nullptr;
 ErrorStatus HSE_SysClock(void)
 {
     ErrorStatus HSE_StartUpState = ERROR;
@@ -39,6 +41,7 @@ int main(void)
     HSE_SysClock();
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
+    std::vector<uint8_t> dat(10,23);
 
     UART::InitStruct u;
     u.bode = 115200;
@@ -67,15 +70,19 @@ int main(void)
 
     delayInit();
     OLED::OLED_Object screen(&oledSoft);
-    // s = &screen;
+    s = &screen;
     screen.loadFont(ASCII[0], 16, 8); //装载字体
     // screen.loadFont(ASCII_24_12[0], 24, 12);
     screen.setScreenSize(128, 64); //设置屏幕分辨率
     screen.clear();
-    screen.print("hello world!\n");
+    // screen.print("hello world!\n");
+    // printf("hello %d",dat.size());
+    for (auto i:dat)
+        screen.putNum(i);
     // screen.reverse(true);
     // screen.setBrightness(0);
     // printf("hello %d",100);
+    // screen.putNum(dat[0]);
     while (1)
     {
         // int i = 0;
@@ -102,11 +109,6 @@ int main(void)
 }
 
 //不能使用对象
-// void putCh(char c)
-// {
-//     s->putChar(c);
-// }
-
 // extern "C"
 // {
 //     //重定义fputc函数
@@ -119,8 +121,8 @@ int main(void)
 
 uint8_t *picPtr = pic;
 
-extern "C"
-{
+// extern "C"
+// {
     void UART2_IRQHandler(void)
     {
         if (UART_GetITStatus(UART2, UART_IT_RXIEN) == SET)
@@ -134,4 +136,4 @@ extern "C"
             UART_ClearITPendingBit(UART2, UART_IT_RXIEN);
         }
     }
-}
+// }

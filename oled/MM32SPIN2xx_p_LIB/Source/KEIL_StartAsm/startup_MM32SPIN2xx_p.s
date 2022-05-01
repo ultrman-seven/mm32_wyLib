@@ -9,6 +9,7 @@
 ;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
+
 Stack_Size      EQU     0x00000400
 
                 AREA    STACK, NOINIT, READWRITE, ALIGN=3
@@ -52,7 +53,7 @@ __Vectors       DCD     __initial_sp                   ; Top of Stack
                 DCD     DebugMon_Handler               ; Debug Monitor Handler
                 DCD     0                              ; Reserved
                 DCD     PendSV_Handler                 ; PendSV Handler
-                DCD     SysTick_Handler                ; SysTick Handler
+                DCD     _Z15SysTick_Handlerv                ; SysTick Handler
 
 ; External Interrupts
                 DCD     WWDG_IRQHandler                ; Window Watchdog
@@ -74,16 +75,16 @@ __Vectors       DCD     __initial_sp                   ; Top of Stack
                 DCD     TIM3_IRQHandler                ; TIM3
                 DCD     TIM8_BRK_UP_TRG_COM_IRQHandler ; TIM8 Brake, Update, Trigger and Commutation
                 DCD     TIM8_CC_IRQHandler             ; TIM8 Capture Compare
-                DCD     TIM14_IRQHandler               ; TIM14
-                DCD     ADC2_IRQHandler                ; ADC2
-                DCD     TIM16_IRQHandler               ; TIM16
-                DCD     TIM17_IRQHandler               ; TIM17
-                DCD     I2C1_IRQHandler                ; I2C1
-                DCD     COMP1_2_3_4_5_IRQHandler       ; Comparators
-                DCD     SPI1_IRQHandler                ; SPI1
-                DCD     SPI2_IRQHandler                ; SPI2
-                DCD     UART1_IRQHandler               ; UART1
-                DCD     UART2_IRQHandler               ; UART2
+                DCD     TIM14_IRQHandler          ; TIM14
+                DCD     ADC2_IRQHandler         ; ADC2
+                DCD     TIM16_IRQHandler     ; TIM16
+                DCD     TIM17_IRQHandler    ; TIM17
+                DCD     I2C1_IRQHandler ; I2C1
+                DCD     _Z24COMP1_2_3_4_5_IRQHandlerv   ; Comparators
+                DCD     _Z15SPI1_IRQHandlerv            ; SPI1
+                DCD     _Z15SPI2_IRQHandlerv            ; SPI2
+                DCD     _Z16UART1_IRQHandlerv           ; UART1
+                DCD     _Z16UART2_IRQHandlerv           ; UART2
 
                 
 __Vectors_End
@@ -175,8 +176,8 @@ PendSV_Handler  PROC
                 EXPORT  PendSV_Handler                 [WEAK]
                 B       .
                 ENDP
-SysTick_Handler PROC
-                EXPORT  SysTick_Handler                [WEAK]
+_Z15SysTick_Handlerv PROC
+                EXPORT  _Z15SysTick_Handlerv                [WEAK]
                 B       .
                 ENDP
 
@@ -206,11 +207,11 @@ Default_Handler PROC
                 EXPORT  TIM16_IRQHandler               [WEAK]
                 EXPORT  TIM17_IRQHandler               [WEAK]
                 EXPORT  I2C1_IRQHandler                [WEAK]
-                EXPORT  COMP1_2_3_4_5_IRQHandler       [WEAK]
-                EXPORT  SPI1_IRQHandler                [WEAK]
-                EXPORT  SPI2_IRQHandler                [WEAK]
-                EXPORT  UART1_IRQHandler               [WEAK]
-                EXPORT  UART2_IRQHandler               [WEAK]
+                EXPORT  _Z24COMP1_2_3_4_5_IRQHandlerv       [WEAK]
+                EXPORT  _Z15SPI1_IRQHandlerv                [WEAK]
+                EXPORT  _Z15SPI2_IRQHandlerv                [WEAK]
+                EXPORT  _Z16UART1_IRQHandlerv               [WEAK]
+                EXPORT  _Z16UART2_IRQHandlerv               [WEAK]
 
 
 
@@ -238,11 +239,11 @@ ADC2_IRQHandler
 TIM16_IRQHandler
 TIM17_IRQHandler
 I2C1_IRQHandler
-COMP1_2_3_4_5_IRQHandler
-SPI1_IRQHandler
-SPI2_IRQHandler
-UART1_IRQHandler
-UART2_IRQHandler
+_Z24COMP1_2_3_4_5_IRQHandlerv
+_Z15SPI1_IRQHandlerv
+_Z15SPI2_IRQHandlerv
+_Z16UART1_IRQHandlerv
+_Z16UART2_IRQHandlerv
 
 
                 B       .

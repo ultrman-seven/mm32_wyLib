@@ -1,7 +1,60 @@
 #include "common.h"
 #include "stdio.h"
-// #include "core_cm0.h"
-// extern "C" {
+#include "oled/oled.hpp"
+#pragma import(__use_no_semihosting)
+
+extern "C"
+{
+    void _sys_exit(int returncode)
+    {
+        printf("Exited! returncode=%d\n", returncode);
+        while (1)
+            ;
+    }
+
+    void _ttywrch(int ch)
+    {
+    }
+}
+extern OLED::OLED_Object *s;
+
+
+namespace std
+{
+    struct __FILE
+    {
+        int handle;
+        /* Whatever you require here. If the only file you are using is */
+        /* standard output using printf() for debugging, no file handling */
+        /* is required. */
+    };
+
+    FILE __stdin = {0};
+    FILE __stdout = {1};
+    FILE __stderr = {2};
+
+    int fputc(int ch, FILE *f)
+    {
+        s->putChar(ch);
+        return ch;
+    }
+    int fclose(FILE * stream)
+  {
+    return 0;
+  }
+  
+  int fseek(FILE *stream, long int offset, int whence)
+  {
+    return -1;
+  }
+  
+  int fflush(FILE *stream)
+  {
+    return 0;
+  }
+
+} // namespace std
+
 
 uint32_t sysTicDecTime = 0;
 __IO uint32_t msTimeStamp = 0;
@@ -14,7 +67,7 @@ void delayInit(void)
 void delay(__IO uint32_t time)
 {
     while (time--)
-        __nop();
+        ;//__nop();
 }
 
 void delayMs(uint32_t time)
@@ -30,7 +83,7 @@ int getTimeStamp(uint32_t *t)
     return 0;
 }
 
-extern "C" {
+//extern "C" {
 void SysTick_Handler(void)
 {
     msTimeStamp++;
@@ -38,4 +91,4 @@ void SysTick_Handler(void)
         sysTicDecTime--;
 }
 
-}
+//}
