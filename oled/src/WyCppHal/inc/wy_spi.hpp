@@ -37,7 +37,12 @@ namespace SPI
         SPI_TypeDef *spi;
         void init(HardInitStruct *h);
         void init(SoftInitStruct *s);
-        void sendByte(uint8_t dat);
+        void sendOneByte(uint8_t dat);
+        template <typename DataType>
+        void sendData(DataType dat);
+        // void sendData(uint8_t dat) {sendOneByte(dat);}
+        // void sendData(uint16_t dat);
+        // void sendData(uint32_t dat);
 
     public:
         SPI_Object(/* args */) = default;

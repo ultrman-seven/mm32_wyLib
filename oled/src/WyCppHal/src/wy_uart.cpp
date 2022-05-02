@@ -83,3 +83,83 @@ void UART_Object::setNVIC(uint8_t priority, bool open)
     NVIC_Init(&nvic);
     UART_ITConfig(this->uart, UART_IT_RXIEN, ENABLE);
 }
+
+void (*dmaCh3IntFun)(void) = nullptr;
+void (*dmaCh5IntFun)(void) = nullptr;
+void UART_Object::setDMA(uint32_t add, uint16_t size, uint8_t priority, char mode, bool interrupt, void (*f)(void))
+{
+    NVIC_InitTypeDef nvic;
+    switch ((uint32_t)(this->uart))
+    {
+    case (uint32_t)UART1:
+        this->dmaChannel = DMA1_Channel3;
+        dmaCh3IntFun = f;
+        nvic.NVIC_IRQChannel = DMA1_Channel2_3_IRQn;
+        break;
+    case (uint32_t)UART2:
+        this->dmaChannel = DMA1_Channel5;
+        dmaCh5IntFun = f;
+        nvic.NVIC_IRQChannel = DMA1_Channel4_5_IRQn;
+        break;
+    default:
+        break;
+    }
+    nvic.NVIC_IRQChannelCmd = ENABLE;
+    nvic.NVIC_IRQChannelPriority = 1;
+    if (interrupt)
+        NVIC_Init(&nvic);
+
+    DMA_InitTypeDef dma;
+    dma.DMA_Priority = priority;
+    dma.DMA_DIR = mode == 't' ? DMA_DIR_PeripheralDST : DMA_DIR_PeripheralSRC;
+    dma.DMA_PeripheralBaseAddr = mode == 't' ? this->uart->TDR : this->uart->RDR;
+    dma.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
+    dma.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+
+    dma.DMA_BufferSize = size;
+    dma.DMA_M2M = DMA_M2M_Disable;
+    dma.DMA_MemoryBaseAddr = add;
+    dma.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
+    dma.DMA_MemoryInc = DMA_MemoryInc_Enable;
+
+    dma.DMA_Mode = DMA_Mode_Normal;
+
+    DMA_Init(this->dmaChannel, &dma);
+    DMA_Cmd(this->dmaChannel, ENABLE);
+    UART_DMACmd(this->uart, UART_DMAReq_EN, ENABLE);
+}
+
+void UART_Object::setDMA_InterruptFunction(void (*f)(void))
+{
+    switch ((uint32_t)(this->uart))
+    {
+    case (uint32_t)UART1:
+        dmaCh3IntFun = f;
+        break;
+    case (uint32_t)UART2:
+        this->dmaChannel = DMA1_Channel5;
+        break;
+    default:
+        break;
+    }
+}
+void DMA1_Channel2_3_IRQHandler(void)
+{
+    if (DMA_GetITStatus(DMA1_IT_TC3) == SET)
+    {
+        DMA_ClearITPendingBit(DMA1_IT_TC3);
+        DMA_Cmd(DMA1_Channel3, DISABLE);
+        if (dmaCh3IntFun != nullptr)
+            dmaCh3IntFun();
+    }
+}
+void DMA1_Channel4_5_IRQHandler(void)
+{
+    if (DMA_GetITStatus(DMA1_IT_TC5) == SET)
+    {
+        DMA_ClearITPendingBit(DMA1_IT_TC5);
+        DMA_Cmd(DMA1_Channel5, DISABLE);
+        if (dmaCh5IntFun != nullptr)
+            dmaCh5IntFun();
+    }
+}

@@ -538,6 +538,11 @@
               <FileType>8</FileType>
               <FilePath>.\src\OLED\z_gif.cpp</FilePath>
             </File>
+            <File>
+              <FileName>tft.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\src\OLED\tft.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

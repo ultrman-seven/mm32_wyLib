@@ -56,30 +56,30 @@ __Vectors       DCD     __initial_sp                   ; Top of Stack
                 DCD     _Z15SysTick_Handlerv                ; SysTick Handler
 
 ; External Interrupts
-                DCD     WWDG_IRQHandler                ; Window Watchdog
-                DCD     PVD_IRQHandler                 ; PVD through EXTI Line detect
-                DCD     PWM_IRQHandler                 ; Commutation and input error interrupt
-                DCD     FLASH_IRQHandler               ; FLASH
-                DCD     RCC_IRQHandler                 ; RCC 
-                DCD     EXTI0_1_IRQHandler             ; EXTI Line 0 and 1
-                DCD     EXTI2_3_IRQHandler             ; EXTI Line 2 and 3
-                DCD     EXTI4_15_IRQHandler            ; EXTI Line 4 to 15
-                DCD     HWDIV_IRQHandler               ; HWDIV
-                DCD     DMA1_Channel1_IRQHandler       ; DMA1 Channel 1
-                DCD     DMA1_Channel2_3_IRQHandler     ; DMA1 Channel 2 and Channel 3
-                DCD     DMA1_Channel4_5_IRQHandler     ; DMA1 Channel 4 and Channel 5
-                DCD     ADC1_IRQHandler                ; ADC1
-                DCD     TIM1_BRK_UP_TRG_COM_IRQHandler ; TIM1 Break, Update, Trigger and Commutation
-                DCD     TIM1_CC_IRQHandler             ; TIM1 Capture Compare
-                DCD     TIM2_IRQHandler                ; TIM2
-                DCD     TIM3_IRQHandler                ; TIM3
-                DCD     TIM8_BRK_UP_TRG_COM_IRQHandler ; TIM8 Brake, Update, Trigger and Commutation
-                DCD     TIM8_CC_IRQHandler             ; TIM8 Capture Compare
-                DCD     TIM14_IRQHandler          ; TIM14
-                DCD     ADC2_IRQHandler         ; ADC2
-                DCD     TIM16_IRQHandler     ; TIM16
-                DCD     TIM17_IRQHandler    ; TIM17
-                DCD     I2C1_IRQHandler ; I2C1
+                DCD     _Z15WWDG_IRQHandlerv                ; Window Watchdog
+                DCD     _Z14PVD_IRQHandlerv                 ; PVD through EXTI Line detect
+                DCD     _Z14PWM_IRQHandlerv                 ; Commutation and input error interrupt
+                DCD     _Z16FLASH_IRQHandlerv               ; FLASH
+                DCD     _Z14RCC_IRQHandlerv                 ; RCC 
+                DCD     _Z18EXTI0_1_IRQHandlerv             ; EXTI Line 0 and 1
+                DCD     _Z18EXTI2_3_IRQHandlerv             ; EXTI Line 2 and 3
+                DCD     _Z19EXTI4_15_IRQHandlerv            ; EXTI Line 4 to 15
+                DCD     _Z16HWDIV_IRQHandlerv               ; HWDIV
+                DCD     _Z24DMA1_Channel1_IRQHandlerv       ; DMA1 Channel 1
+                DCD     _Z26DMA1_Channel2_3_IRQHandlerv     ; DMA1 Channel 2 and Channel 3
+                DCD     _Z26DMA1_Channel4_5_IRQHandlerv     ; DMA1 Channel 4 and Channel 5
+                DCD     _Z15ADC1_IRQHandlerv                ; ADC1
+                DCD     _Z30TIM1_BRK_UP_TRG_COM_IRQHandlerv ; TIM1 Break, Update, Trigger and Commutation
+                DCD     _Z18TIM1_CC_IRQHandlerv             ; TIM1 Capture Compare
+                DCD     _Z15TIM2_IRQHandlerv                ; TIM2
+                DCD     _Z15TIM3_IRQHandlerv                ; TIM3
+                DCD     _Z30TIM8_BRK_UP_TRG_COM_IRQHandlerv ; TIM8 Brake, Update, Trigger and Commutation
+                DCD     _Z18TIM8_CC_IRQHandlerv             ; TIM8 Capture Compare
+                DCD     _Z16TIM14_IRQHandlerv          ; TIM14
+                DCD     _Z15ADC2_IRQHandlerv         ; ADC2
+                DCD     _Z16TIM16_IRQHandlerv     ; TIM16
+                DCD     _Z16TIM17_IRQHandlerv    ; TIM17
+                DCD     _Z15I2C1_IRQHandlerv ; I2C1
                 DCD     _Z24COMP1_2_3_4_5_IRQHandlerv   ; Comparators
                 DCD     _Z15SPI1_IRQHandlerv            ; SPI1
                 DCD     _Z15SPI2_IRQHandlerv            ; SPI2
@@ -183,30 +183,30 @@ _Z15SysTick_Handlerv PROC
 
 Default_Handler PROC
 
-                EXPORT  WWDG_IRQHandler                [WEAK]
-                EXPORT  PVD_IRQHandler                 [WEAK]
-                EXPORT  PWM_IRQHandler                 [WEAK]
-                EXPORT  FLASH_IRQHandler               [WEAK]
-                EXPORT  RCC_IRQHandler                 [WEAK]
-                EXPORT  EXTI0_1_IRQHandler             [WEAK]
-                EXPORT  EXTI2_3_IRQHandler             [WEAK]
-                EXPORT  EXTI4_15_IRQHandler            [WEAK]
-                EXPORT  HWDIV_IRQHandler               [WEAK]
-                EXPORT  DMA1_Channel1_IRQHandler       [WEAK]
-                EXPORT  DMA1_Channel2_3_IRQHandler     [WEAK]
-                EXPORT  DMA1_Channel4_5_IRQHandler     [WEAK]
-                EXPORT  ADC1_IRQHandler                [WEAK]
-                EXPORT  TIM1_BRK_UP_TRG_COM_IRQHandler [WEAK]
-                EXPORT  TIM1_CC_IRQHandler             [WEAK]
-                EXPORT  TIM2_IRQHandler                [WEAK]
-                EXPORT  TIM3_IRQHandler                [WEAK]
-                EXPORT  TIM8_BRK_UP_TRG_COM_IRQHandler [WEAK]
-                EXPORT  TIM8_CC_IRQHandler             [WEAK]
-                EXPORT  TIM14_IRQHandler               [WEAK]
-                EXPORT  ADC2_IRQHandler                [WEAK]
-                EXPORT  TIM16_IRQHandler               [WEAK]
-                EXPORT  TIM17_IRQHandler               [WEAK]
-                EXPORT  I2C1_IRQHandler                [WEAK]
+                EXPORT  _Z15WWDG_IRQHandlerv                [WEAK]
+                EXPORT  _Z14PVD_IRQHandlerv                 [WEAK]
+                EXPORT  _Z14PWM_IRQHandlerv                 [WEAK]
+                EXPORT  _Z16FLASH_IRQHandlerv               [WEAK]
+                EXPORT  _Z14RCC_IRQHandlerv                 [WEAK]
+                EXPORT  _Z18EXTI0_1_IRQHandlerv             [WEAK]
+                EXPORT  _Z18EXTI2_3_IRQHandlerv             [WEAK]
+                EXPORT  _Z19EXTI4_15_IRQHandlerv            [WEAK]
+                EXPORT  _Z16HWDIV_IRQHandlerv               [WEAK]
+                EXPORT  _Z24DMA1_Channel1_IRQHandlerv       [WEAK]
+                EXPORT  _Z26DMA1_Channel2_3_IRQHandlerv     [WEAK]
+                EXPORT  _Z26DMA1_Channel4_5_IRQHandlerv     [WEAK]
+                EXPORT  _Z15ADC1_IRQHandlerv                [WEAK]
+                EXPORT  _Z30TIM1_BRK_UP_TRG_COM_IRQHandlerv [WEAK]
+                EXPORT  _Z18TIM1_CC_IRQHandlerv             [WEAK]
+                EXPORT  _Z15TIM2_IRQHandlerv                [WEAK]
+                EXPORT  _Z15TIM3_IRQHandlerv                [WEAK]
+                EXPORT  _Z30TIM8_BRK_UP_TRG_COM_IRQHandlerv [WEAK]
+                EXPORT  _Z18TIM8_CC_IRQHandlerv             [WEAK]
+                EXPORT  _Z16TIM14_IRQHandlerv               [WEAK]
+                EXPORT  _Z15ADC2_IRQHandlerv                [WEAK]
+                EXPORT  _Z16TIM16_IRQHandlerv               [WEAK]
+                EXPORT  _Z16TIM17_IRQHandlerv               [WEAK]
+                EXPORT  _Z15I2C1_IRQHandlerv                [WEAK]
                 EXPORT  _Z24COMP1_2_3_4_5_IRQHandlerv       [WEAK]
                 EXPORT  _Z15SPI1_IRQHandlerv                [WEAK]
                 EXPORT  _Z15SPI2_IRQHandlerv                [WEAK]
@@ -215,30 +215,30 @@ Default_Handler PROC
 
 
 
-WWDG_IRQHandler
-PVD_IRQHandler
-PWM_IRQHandler
-FLASH_IRQHandler
-RCC_IRQHandler
-EXTI0_1_IRQHandler
-EXTI2_3_IRQHandler
-EXTI4_15_IRQHandler
-HWDIV_IRQHandler
-DMA1_Channel1_IRQHandler
-DMA1_Channel2_3_IRQHandler
-DMA1_Channel4_5_IRQHandler
-ADC1_IRQHandler
-TIM1_BRK_UP_TRG_COM_IRQHandler
-TIM1_CC_IRQHandler
-TIM2_IRQHandler
-TIM3_IRQHandler
-TIM8_BRK_UP_TRG_COM_IRQHandler
-TIM8_CC_IRQHandler
-TIM14_IRQHandler
-ADC2_IRQHandler
-TIM16_IRQHandler
-TIM17_IRQHandler
-I2C1_IRQHandler
+_Z15WWDG_IRQHandlerv
+_Z14PVD_IRQHandlerv
+_Z14PWM_IRQHandlerv
+_Z16FLASH_IRQHandlerv
+_Z14RCC_IRQHandlerv
+_Z18EXTI0_1_IRQHandlerv
+_Z18EXTI2_3_IRQHandlerv
+_Z19EXTI4_15_IRQHandlerv
+_Z16HWDIV_IRQHandlerv
+_Z24DMA1_Channel1_IRQHandlerv
+_Z26DMA1_Channel2_3_IRQHandlerv
+_Z26DMA1_Channel4_5_IRQHandlerv
+_Z15ADC1_IRQHandlerv
+_Z30TIM1_BRK_UP_TRG_COM_IRQHandlerv
+_Z18TIM1_CC_IRQHandlerv
+_Z15TIM2_IRQHandlerv
+_Z15TIM3_IRQHandlerv
+_Z30TIM8_BRK_UP_TRG_COM_IRQHandlerv
+_Z18TIM8_CC_IRQHandlerv
+_Z16TIM14_IRQHandlerv
+_Z15ADC2_IRQHandlerv
+_Z16TIM16_IRQHandlerv
+_Z16TIM17_IRQHandlerv
+_Z15I2C1_IRQHandlerv
 _Z24COMP1_2_3_4_5_IRQHandlerv
 _Z15SPI1_IRQHandlerv
 _Z15SPI2_IRQHandlerv

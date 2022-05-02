@@ -19,7 +19,7 @@ void SPI_Object::init(HardInitStruct *hard)
 {
     GPIO_InitTypeDef gpio;
     SPI_InitTypeDef spi;
-    
+
     switch (hard->Spi_Num)
     {
     case 1:
@@ -110,12 +110,17 @@ void SPI_Object::init(SoftInitStruct *soft)
     this->SCLK_Port = soft->SCLK_Port;
 }
 
-void SPI_Object::sendByte(uint8_t dat)
+//之后用模板重写
+void SPI_Object::sendOneByte(uint8_t dat)
 {
     GPIO_ResetBits(this->CS_Port, this->CS_Pin);
 
     if (this->spi != nullptr)
+    {
         SPI_SendData(this->spi, dat);
+        while (!SPI_GetFlagStatus(this->spi, SPI_FLAG_TXEPT))
+            ;
+    }
     else
     {
         uint8_t cnt;
@@ -123,6 +128,47 @@ void SPI_Object::sendByte(uint8_t dat)
         {
             GPIO_ResetBits(this->SCLK_Port, this->SCLK_Pin);
             if ((dat & 0x80) >> 7)
+                GPIO_SetBits(this->MOSI_Port, this->MOSI_Pin);
+            else
+                GPIO_ResetBits(this->MOSI_Port, this->MOSI_Pin);
+            dat = dat << 1;
+            delay(3);
+            GPIO_SetBits(this->SCLK_Port, this->SCLK_Pin);
+            delay(3);
+            GPIO_ResetBits(this->SCLK_Port, this->SCLK_Pin);
+        }
+    }
+    delay(2);
+    GPIO_SetBits(this->CS_Port, this->CS_Pin);
+}
+
+template <typename DataType>
+void SPI_Object::sendData(DataType dat)
+{
+    uint8_t s = sizeof(dat);
+
+    GPIO_ResetBits(this->CS_Port, this->CS_Pin);
+
+    if (this->spi != nullptr)
+    {
+        uint8_t tmp;
+        while (s--)
+        {
+            /* code */
+            tmp = (dat >> (8 * s)) & 0xff;
+            SPI_SendData(this->spi, tmp);
+            while (!SPI_GetFlagStatus(this->spi, SPI_FLAG_TXEPT))
+                ;
+        }
+    }
+    else
+    {
+        uint8_t cnt;
+        s *= 8;
+        for (cnt = 0; cnt < s; cnt++)
+        {
+            GPIO_ResetBits(this->SCLK_Port, this->SCLK_Pin);
+            if ((dat & 0x8000) >> s - 1)
                 GPIO_SetBits(this->MOSI_Port, this->MOSI_Pin);
             else
                 GPIO_ResetBits(this->MOSI_Port, this->MOSI_Pin);

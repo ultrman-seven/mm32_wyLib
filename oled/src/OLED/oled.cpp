@@ -4,35 +4,12 @@ using namespace OLED;
 
 void OLED_Object::sendByte(uint8_t dat, bool isCMD)
 {
-
-    GPIO_ResetBits(this->CS_Port, this->CS_Pin);
-
     if (isCMD)
         GPIO_ResetBits(this->DC_Port, this->DC_Pin);
     else
         GPIO_SetBits(this->DC_Port, this->DC_Pin);
 
-    if (this->spi != nullptr)
-        SPI_SendData(this->spi, dat);
-    else
-    {
-        uint8_t cnt;
-        for (cnt = 0; cnt < 8; cnt++)
-        {
-            GPIO_ResetBits(this->SCLK_Port, this->SCLK_Pin);
-            if ((dat & 0x80) >> 7)
-                GPIO_SetBits(this->MOSI_Port, this->MOSI_Pin);
-            else
-                GPIO_ResetBits(this->MOSI_Port, this->MOSI_Pin);
-            dat = dat << 1;
-            delay(3);
-            GPIO_SetBits(this->SCLK_Port, this->SCLK_Pin);
-            delay(3);
-            GPIO_ResetBits(this->SCLK_Port, this->SCLK_Pin);
-        }
-    }
-    delay(2);
-    GPIO_SetBits(this->CS_Port, this->CS_Pin);
+    this->sendOneByte(dat);
 }
 
 void OLED_Object::reset(void)
