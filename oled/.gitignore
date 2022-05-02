@@ -10,3 +10,10 @@ EventRecorderStub.scvd
 tmp/
 src/*/*.c.md
 src/*/*.h.md
+src/*/*.cpp.md
+src/*/*.hpp.md
+src/*/*copy.cpp
+src/*/*copy.hpp
+src/*copy.cpp
+src/*copy.hpp
+
