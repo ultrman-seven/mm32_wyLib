@@ -339,7 +339,7 @@
               <MiscControls>--cpp11</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>.\MM32SPIN2xx_p_LIB\Include;.\MM32SPIN2xx_p_LIB\HAL_lib\inc;.\CMSIS\KEIL_CORE;.\src\OLED;.\src;.\src\WyCppHal\inc</IncludePath>
+              <IncludePath>..\MM32SPIN2xx_p_LIB\Include;..\MM32SPIN2xx_p_LIB\HAL_lib\inc;..\CMSIS\KEIL_CORE;.\src\OLED;.\src;..\WyCppHal\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -386,97 +386,97 @@
             <File>
               <FileName>HAL_adc.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_adc.cpp</FilePath>
+              <FilePath>..\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_adc.cpp</FilePath>
             </File>
             <File>
               <FileName>HAL_comp.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_comp.cpp</FilePath>
+              <FilePath>..\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_comp.cpp</FilePath>
             </File>
             <File>
               <FileName>HAL_crc.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_crc.cpp</FilePath>
+              <FilePath>..\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_crc.cpp</FilePath>
             </File>
             <File>
               <FileName>HAL_div.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_div.cpp</FilePath>
+              <FilePath>..\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_div.cpp</FilePath>
             </File>
             <File>
               <FileName>HAL_dma.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_dma.cpp</FilePath>
+              <FilePath>..\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_dma.cpp</FilePath>
             </File>
             <File>
               <FileName>HAL_exti.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_exti.cpp</FilePath>
+              <FilePath>..\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_exti.cpp</FilePath>
             </File>
             <File>
               <FileName>HAL_flash.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_flash.cpp</FilePath>
+              <FilePath>..\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_flash.cpp</FilePath>
             </File>
             <File>
               <FileName>HAL_gpio.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_gpio.cpp</FilePath>
+              <FilePath>..\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_gpio.cpp</FilePath>
             </File>
             <File>
               <FileName>HAL_i2c.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_i2c.cpp</FilePath>
+              <FilePath>..\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_i2c.cpp</FilePath>
             </File>
             <File>
               <FileName>HAL_iwdg.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_iwdg.cpp</FilePath>
+              <FilePath>..\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_iwdg.cpp</FilePath>
             </File>
             <File>
               <FileName>HAL_misc.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_misc.cpp</FilePath>
+              <FilePath>..\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_misc.cpp</FilePath>
             </File>
             <File>
               <FileName>HAL_op.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_op.cpp</FilePath>
+              <FilePath>..\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_op.cpp</FilePath>
             </File>
             <File>
               <FileName>HAL_pwr.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_pwr.cpp</FilePath>
+              <FilePath>..\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_pwr.cpp</FilePath>
             </File>
             <File>
               <FileName>HAL_rcc.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_rcc.cpp</FilePath>
+              <FilePath>..\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_rcc.cpp</FilePath>
             </File>
             <File>
               <FileName>HAL_spi.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_spi.cpp</FilePath>
+              <FilePath>..\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_spi.cpp</FilePath>
             </File>
             <File>
               <FileName>HAL_syscfg.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_syscfg.cpp</FilePath>
+              <FilePath>..\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_syscfg.cpp</FilePath>
             </File>
             <File>
               <FileName>HAL_tim.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_tim.cpp</FilePath>
+              <FilePath>..\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_tim.cpp</FilePath>
             </File>
             <File>
               <FileName>HAL_uart.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_uart.cpp</FilePath>
+              <FilePath>..\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_uart.cpp</FilePath>
             </File>
             <File>
               <FileName>HAL_wwdg.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_wwdg.cpp</FilePath>
+              <FilePath>..\MM32SPIN2xx_p_LIB\HAL_lib\src\HAL_wwdg.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -486,12 +486,12 @@
             <File>
               <FileName>startup_MM32SPIN2xx_p.s</FileName>
               <FileType>2</FileType>
-              <FilePath>.\MM32SPIN2xx_p_LIB\Source\KEIL_StartAsm\startup_MM32SPIN2xx_p.s</FilePath>
+              <FilePath>..\MM32SPIN2xx_p_LIB\Source\KEIL_StartAsm\startup_MM32SPIN2xx_p.s</FilePath>
             </File>
             <File>
               <FileName>system_MM32SPIN2xx_p.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\MM32SPIN2xx_p_LIB\Source\system_MM32SPIN2xx_p.cpp</FilePath>
+              <FilePath>..\MM32SPIN2xx_p_LIB\Source\system_MM32SPIN2xx_p.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -512,11 +512,6 @@
               <FileName>hander.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\hander.c</FilePath>
-            </File>
-            <File>
-              <FileName>common.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\common.cpp</FilePath>
             </File>
             <File>
               <FileName>generalOutput.cpp</FileName>
@@ -549,14 +544,24 @@
           <GroupName>WY</GroupName>
           <Files>
             <File>
+              <FileName>common.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\WyCppHal\src\common.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>wy_iic.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\WyCppHal\src\wy_iic.cpp</FilePath>
+            </File>
+            <File>
               <FileName>wy_spi.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\src\WyCppHal\src\wy_spi.cpp</FilePath>
+              <FilePath>..\WyCppHal\src\wy_spi.cpp</FilePath>
             </File>
             <File>
               <FileName>wy_uart.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\src\WyCppHal\src\wy_uart.cpp</FilePath>
+              <FilePath>..\WyCppHal\src\wy_uart.cpp</FilePath>
             </File>
           </Files>
         </Group>
