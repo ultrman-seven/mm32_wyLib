@@ -11,5 +11,10 @@ void delay(__IO uint32_t time);
 void delayInit(void);
 void delayMs(uint32_t time);
 int getTimeStamp(uint32_t *t);
+namespace sysConfig
+{
+    void redirect_Printf(void (*f)(char));
+} // namespace sysConfig
+
 //}
 #endif /* __WY_LIB_COMMON_H__ */

@@ -55,9 +55,15 @@ void cptRxData(void)
     }
 }
 
+void p_re(char ch)
+{
+    s->putChar(ch);
+}
+
 int main(void)
 {
     HSE_SysClock();
+    sysConfig::redirect_Printf(p_re);
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
     // std::vector<uint8_t> dat(10, 23);

@@ -17,7 +17,12 @@ extern "C"
     {
     }
 }
-extern OLED::OLED_Object *s;
+void (*printFunction)(char c) = nullptr;
+
+void sysConfig::redirect_Printf(void (*f)(char))
+{
+    printFunction = f;
+}
 
 namespace std
 {
@@ -35,7 +40,7 @@ namespace std
 
     int fputc(int ch, FILE *f)
     {
-        s->putChar(ch);
+        printFunction(ch);
         return ch;
     }
     int fclose(FILE *stream)
