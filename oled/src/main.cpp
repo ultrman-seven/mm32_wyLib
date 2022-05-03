@@ -41,6 +41,7 @@ void displayPic(void)
 {
     // s->clear();
     s->Picture_display(pic, 0, 0, 64, 128);
+    c->DMA_On(true);
 }
 
 uint8_t *picPtr = pic;
@@ -93,10 +94,9 @@ int main(void)
     u.TxAF = GPIO_AF_1;
     UART::UART_Object computer(u);
     c = &computer;
-    // computer.setNVIC();
-    // computer.setRxFunction(cptRxData);
+    //  computer.setNVIC();
+    //  computer.setRxFunction(cptRxData);
     computer.setDMA((uint32_t)pic, 1024, 1, 'r', true, displayPic);
-
 
     while (1)
     {
@@ -113,6 +113,8 @@ int main(void)
         //     screen.Picture_display(mao_gif[i++], 0, 0, 64, 128);
         //     delayMs(40);
         // }
+        // screen.Picture_display(pic, 0, 0, 128, 64);
+        // delayMs(500);
     }
 
     return 0;

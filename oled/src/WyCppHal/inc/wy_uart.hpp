@@ -35,6 +35,7 @@ namespace UART
         void setDMA(uint32_t add, uint16_t size, uint8_t priority, char mode, bool interrupt) { setDMA(add, size, priority, mode, interrupt, nullptr); }
         void setDMA(uint32_t add, uint16_t size, uint8_t priority, char mode, bool interrupt, void (*f)(void));
         void setDMA_InterruptFunction(void (*f)(void));
+        void DMA_On(bool set) {DMA_Cmd(this->dmaChannel, set ? ENABLE : DISABLE); }
 
         void sendByte(uint8_t dat);
         void sendByte(uint8_t *dat, uint8_t len);

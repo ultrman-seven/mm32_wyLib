@@ -118,6 +118,7 @@ void UART_Object::setDMA(uint32_t add, uint16_t size, uint8_t priority, char mod
     if (interrupt)
         NVIC_Init(&nvic);
 
+    RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1,ENABLE);
     DMA_InitTypeDef dma;
     dma.DMA_Priority = DMA_Priority_High;
     dma.DMA_DIR = mode == 't' ? DMA_DIR_PeripheralDST : DMA_DIR_PeripheralSRC;
@@ -131,7 +132,7 @@ void UART_Object::setDMA(uint32_t add, uint16_t size, uint8_t priority, char mod
     dma.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
     dma.DMA_MemoryInc = DMA_MemoryInc_Enable;
 
-    dma.DMA_Mode = DMA_Mode_Normal;
+    dma.DMA_Mode = DMA_Mode_Circular;
     UART_DMACmd(this->uart, UART_DMAReq_EN, ENABLE);
 
     DMA_Init(this->dmaChannel, &dma);
