@@ -96,3 +96,14 @@ void SysTick_Handler(void)
 }
 
 //}
+
+uint8_t pin2pinSource(uint16_t pin)
+{
+    uint8_t result = 0;
+    while (pin != 1)
+    {
+        pin /= 2;
+        result++;
+    }
+    return result;
+}

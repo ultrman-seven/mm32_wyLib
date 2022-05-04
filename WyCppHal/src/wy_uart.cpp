@@ -4,17 +4,6 @@
 // #include <iostream>
 using namespace UART;
 
-uint8_t pin2pinSource(uint16_t pin);
-// {
-//     uint8_t result = 0;
-//     while (pin != 1)
-//     {
-//         pin /= 2;
-//         result++;
-//     }
-//     return result;
-// }
-
 void (*uart1RxFux)(void) = nullptr;
 void (*uart2RxFux)(void) = nullptr;
 

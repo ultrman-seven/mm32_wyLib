@@ -4,17 +4,6 @@ using namespace SPI;
 
 SPI_Object::~SPI_Object() {}
 
-uint8_t pin2pinSource(uint16_t pin)
-{
-    uint8_t result = 0;
-    while (pin != 1)
-    {
-        pin /= 2;
-        result++;
-    }
-    return result;
-}
-
 void SPI_Object::init(HardInitStruct *hard)
 {
     GPIO_InitTypeDef gpio;

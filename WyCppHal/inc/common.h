@@ -11,6 +11,7 @@ void delay(__IO uint32_t time);
 void delayInit(void);
 void delayMs(uint32_t time);
 int getTimeStamp(uint32_t *t);
+uint8_t pin2pinSource(uint16_t pin);
 namespace sysConfig
 {
     void redirect_Printf(void (*f)(char));
