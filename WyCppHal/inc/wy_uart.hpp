@@ -1,5 +1,5 @@
-#ifndef C7A23A25_2EEC_4976_ACA7_6108629DC386
-#define C7A23A25_2EEC_4976_ACA7_6108629DC386
+#ifndef __WY_LIB_CPP_UART_HPP__
+#define __WY_LIB_CPP_UART_HPP__
 namespace UART
 {
     struct InitStruct
@@ -45,4 +45,4 @@ namespace UART
 
 } // namespace UART
 
-#endif /* C7A23A25_2EEC_4976_ACA7_6108629DC386 */
+#endif /* __WY_LIB_CPP_UART_HPP__ */

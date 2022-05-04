@@ -1,5 +1,5 @@
-#ifndef BC943480_5B0C_49A4_9D1D_9EF30748E63E
-#define BC943480_5B0C_49A4_9D1D_9EF30748E63E
+#ifndef __WY_LIB_CPP_SPI_HPP__
+#define __WY_LIB_CPP_SPI_HPP__
 #include "common.h"
 namespace SPI
 {
@@ -54,4 +54,4 @@ namespace SPI
 
 } // namespace SPI
 
-#endif /* BC943480_5B0C_49A4_9D1D_9EF30748E63E */
+#endif /* __WY_LIB_CPP_SPI_HPP__ */

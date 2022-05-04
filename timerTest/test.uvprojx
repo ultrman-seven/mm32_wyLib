@@ -509,11 +509,6 @@
               <FilePath>.\src\main.cpp</FilePath>
             </File>
             <File>
-              <FileName>hander.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\hander.c</FilePath>
-            </File>
-            <File>
               <FileName>generalOutput.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\OLED\generalOutput.cpp</FilePath>
@@ -522,21 +517,6 @@
               <FileName>font.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\src\OLED\font.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>a_gif.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\OLED\a_gif.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>z_gif.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\OLED\z_gif.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>tft.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\src\OLED\tft.cpp</FilePath>
             </File>
           </Files>
         </Group>
