@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "vector": "cpp",
+        "common.h": "c",
+        "cstdio": "cpp"
+    }
+}

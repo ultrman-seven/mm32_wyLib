@@ -509,11 +509,6 @@
               <FilePath>.\src\main.cpp</FilePath>
             </File>
             <File>
-              <FileName>generalOutput.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\WyLib\OLED\generalOutput.cpp</FilePath>
-            </File>
-            <File>
               <FileName>font.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\WyLib\OLED\font.cpp</FilePath>
@@ -547,6 +542,11 @@
               <FileName>wy_tim.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\WyCppHal\src\wy_tim.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>generalOutput.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\WyCppHal\src\generalOutput.cpp</FilePath>
             </File>
           </Files>
         </Group>

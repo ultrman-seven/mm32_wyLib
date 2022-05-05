@@ -1,52 +1,5 @@
 #include "wy_iic.hpp"
 
-#include "common.h"
-#include "vector"
-namespace IIC
-{
-    class IIC_Object
-    {
-    private:
-        GPIO_TypeDef *sda_port, *scl_port;
-        uint16_t sda_pin, scl_pin;
-        uint32_t *CR;
-        uint32_t CR_clear, mode_in, mode_out;
-
-        void ack(bool a);
-        bool wait_ack(void);
-        bool start(void);
-        void end(void);
-        void inputMode(void);
-        void outputMode(void);
-        void iic_delay(void);
-        void sendByte(uint8_t dat);
-        uint8_t getByte(bool a);
-
-    public:
-        IIC_Object() = default;
-        IIC_Object(GPIO_TypeDef *port, uint16_t sda_pin, uint16_t scl_pin)
-        {
-            IIC_Object(port, sda_pin, port, scl_pin);
-        }
-        IIC_Object(GPIO_TypeDef *sda_port, uint16_t sda_pin, GPIO_TypeDef *scl_port, uint16_t scl_pin);
-
-        bool sendData(uint8_t slvAdd, uint8_t regAdd, uint8_t len, uint8_t *dat);
-        bool sendData(uint8_t slvAdd, uint8_t regAdd, uint8_t dat);
-
-        bool readData(uint8_t slvAdd, uint8_t regAdd, uint8_t len, uint8_t *buf);
-        uint8_t readData(uint8_t slvAdd, uint8_t regAdd);
-    };
-
-    class IIC_Slaver
-    {
-    private:
-        uint8_t address;
-
-    public:
-        IIC_Slaver() = default;
-    };
-} // namespace IIC
-
 using namespace IIC;
 
 IIC_Object::IIC_Object(GPIO_TypeDef *sda_port, uint16_t sda_pin, GPIO_TypeDef *scl_port, uint16_t scl_pin)
@@ -62,7 +15,8 @@ IIC_Object::IIC_Object(GPIO_TypeDef *sda_port, uint16_t sda_pin, GPIO_TypeDef *s
     GPIO_Init(sda_port, &gpio);
 
     gpio.GPIO_Pin = scl_pin;
-    gpio.GPIO_Mode = GPIO_Mode_Out_OD;
+    // gpio.GPIO_Mode = GPIO_Mode_Out_OD;
+    gpio.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_Init(scl_port, &gpio);
 
     uint8_t sda_pin_num = pin2pinSource(sda_pin);
@@ -92,9 +46,9 @@ void IIC_Object::outputMode(void)
 
 void IIC_Object::iic_delay(void)
 {
-    uint8_t i = 5;
+    __IO uint8_t i = 5;
     while (i--)
-        ; //__nop();
+        __nop();
 }
 
 bool IIC_Object::start(void)

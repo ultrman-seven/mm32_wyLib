@@ -339,7 +339,7 @@
               <MiscControls>--cpp11</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\MM32SPIN2xx_p_LIB\Include;..\MM32SPIN2xx_p_LIB\HAL_lib\inc;..\CMSIS\KEIL_CORE;.\src\OLED;.\src;..\WyCppHal\inc</IncludePath>
+              <IncludePath>..\MM32SPIN2xx_p_LIB\Include;..\MM32SPIN2xx_p_LIB\HAL_lib\inc;..\CMSIS\KEIL_CORE;.\src;..\WyCppHal\inc;..\WyLib\OLED</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -501,7 +501,7 @@
             <File>
               <FileName>oled.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\src\OLED\oled.cpp</FilePath>
+              <FilePath>..\WyLib\OLED\oled.cpp</FilePath>
             </File>
             <File>
               <FileName>main.cpp</FileName>
@@ -516,27 +516,27 @@
             <File>
               <FileName>generalOutput.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\src\OLED\generalOutput.cpp</FilePath>
+              <FilePath>..\WyCppHal\src\generalOutput.cpp</FilePath>
             </File>
             <File>
               <FileName>font.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\src\OLED\font.cpp</FilePath>
+              <FilePath>..\WyLib\OLED\font.cpp</FilePath>
             </File>
             <File>
               <FileName>a_gif.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\src\OLED\a_gif.cpp</FilePath>
+              <FilePath>..\WyLib\OLED\a_gif.cpp</FilePath>
             </File>
             <File>
               <FileName>z_gif.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\src\OLED\z_gif.cpp</FilePath>
+              <FilePath>..\WyLib\OLED\z_gif.cpp</FilePath>
             </File>
             <File>
               <FileName>tft.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\src\OLED\tft.cpp</FilePath>
+              <FilePath>..\WyLib\OLED\tft.cpp</FilePath>
             </File>
           </Files>
         </Group>
