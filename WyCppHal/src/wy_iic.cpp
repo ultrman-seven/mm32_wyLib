@@ -15,8 +15,8 @@ IIC_Object::IIC_Object(GPIO_TypeDef *sda_port, uint16_t sda_pin, GPIO_TypeDef *s
     GPIO_Init(sda_port, &gpio);
 
     gpio.GPIO_Pin = scl_pin;
-    // gpio.GPIO_Mode = GPIO_Mode_Out_OD;
-    gpio.GPIO_Mode = GPIO_Mode_Out_PP;
+    gpio.GPIO_Mode = GPIO_Mode_Out_OD;
+    // gpio.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_Init(scl_port, &gpio);
 
     uint8_t sda_pin_num = pin2pinSource(sda_pin);
