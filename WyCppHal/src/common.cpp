@@ -70,7 +70,7 @@ void delayInit(void)
 void delay(__IO uint32_t time)
 {
     while (time--)
-        ; //__nop();
+        __nop();
 }
 
 void delayMs(uint32_t time)

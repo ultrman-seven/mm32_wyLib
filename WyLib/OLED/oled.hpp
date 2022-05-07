@@ -9,30 +9,35 @@
 // using std::vector;
 namespace OLED
 {
-    class OLED_Object : public SPI::SPI_Object, public genO::generalOutputBase
+    class OLED_Object : public genO::generalOutputBase //,public SPI::SPI_Object
     {
     private:
         void sendByte(uint8_t dat, bool isCMD);
         void setCol(uint8_t col);
         void setPage(uint8_t page);
         void char_display(const uint8_t *ptr_pic, bool contrast);
+        void (*transFunc)(uint8_t dat) = nullptr;
+        GPIO_TypeDef *DC_Port, *CS_Port, *RES_Port;
+        uint16_t DC_Pin, CS_Pin, RES_Pin;
 
     public:
         char str[64] = {0};
         OLED_Object(/* args */) = default;
-        OLED_Object(SPI::HardInitStruct *hard)
+        OLED_Object(GPIO_TypeDef *port, uint16_t dc, uint16_t cs, uint16_t res)
         {
-            init(hard);
-            reset();
-        };
-        OLED_Object(SPI::SoftInitStruct *soft)
+            this->reInit(port, dc, port, cs, port, res, nullptr);
+        }
+        OLED_Object(GPIO_TypeDef *dcPort, uint16_t dcPin,
+                    GPIO_TypeDef *csPort, uint16_t csPin,
+                    GPIO_TypeDef *resPort, uint16_t resPin, void (*f)(uint8_t))
         {
-            init(soft);
-            reset();
-        };
-        void reInit(SPI::HardInitStruct *hard) { init(hard); };
-        void reInit(SPI::SoftInitStruct *soft) { init(soft); };
-        void printStr(void) {print(str);}
+            this->reInit(dcPort, dcPin, csPort, csPin, resPort, resPin, f);
+        }
+        void reInit(GPIO_TypeDef *dcPort, uint16_t dcPin,
+                    GPIO_TypeDef *csPort, uint16_t csPin,
+                    GPIO_TypeDef *resPort, uint16_t resPin, void (*f)(uint8_t));
+        void loadTransFun(void (*f)(uint8_t)) { this->transFunc = f; }
+        void printStr(void) { print(str); }
         void reset(void);
         void clear(void);
         void Picture_display(uint8_t *ptr_pic, uint8_t colStart, uint8_t pageStart, uint8_t line, uint8_t col);

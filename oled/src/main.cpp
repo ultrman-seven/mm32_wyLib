@@ -3,6 +3,7 @@
 #include "wy_spi.hpp"
 #include "wy_uart.hpp"
 #include "font.hpp"
+#include "wy_8080.hpp"
 #include <stdio.h>
 #include <vector>
 
@@ -60,67 +61,69 @@ void p_re(char ch)
     s->putChar(ch);
 }
 
+// SPI::SPI_Object *spi = nullptr;
+// void spiSend(uint8_t dat)
+// {
+//     spi->sendData(dat);
+// }
+
+intel8080::Intel8080_Object *i_8080 = nullptr;
+void send8080(uint8_t dat)
+{
+    i_8080->sendByte(dat);
+}
+
 int main(void)
 {
     HSE_SysClock();
     sysConfig::redirect_Printf(p_re);
+    delayInit();
+
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
     // std::vector<uint8_t> dat(10, 23);
 
-    SPI::SoftInitStruct oledSoft;
+    // OLED::OLED_Object screen(&oledSoft);
+    // SPI::SPI_Object spi4oled(GPIOA, GPIO_Pin_6, GPIO_Pin_4);
+    // spi = &spi4oled;
 
-    oledSoft.CS_Pin = GPIO_Pin_5;
-    oledSoft.CS_Port = GPIOA;
-    oledSoft.DC_Pin = GPIO_Pin_10;
-    oledSoft.DC_Port = GPIOB;
-    oledSoft.MOSI_Pin = GPIO_Pin_6;
-    oledSoft.MOSI_Port = GPIOA;
-    oledSoft.RES_Pin = GPIO_Pin_11;
-    oledSoft.RES_Port = GPIOB;
-    oledSoft.SCLK_Pin = GPIO_Pin_4;
-    oledSoft.SCLK_Port = GPIOA;
+    intel8080::Intel8080_Object i8080_4oled;
+    i8080_4oled.pinStr.dataHigh = false;
+    i8080_4oled.pinStr.dataPort = GPIOA;
+    i8080_4oled.pinStr.rdPort = GPIOA;
+    i8080_4oled.pinStr.wtPort = GPIOB;
+    i8080_4oled.pinStr.rdPin = GPIO_Pin_12;
+    i8080_4oled.pinStr.wtPin = GPIO_Pin_10;
+    i8080_4oled.init();
+    i_8080 = &i8080_4oled;
 
-    delayInit();
-    OLED::OLED_Object screen(&oledSoft);
+    OLED::OLED_Object screen(GPIOA, GPIO_Pin_10, GPIOB, GPIO_Pin_11, GPIOA, GPIO_Pin_11, send8080);
+    // screen.loadTransFun(spiSend);
+    // screen.loadTransFun(send8080);
     s = &screen;
     screen.loadFont(ASCII[0], 16, 8); //装载字体
     // screen.loadFont(ASCII_24_12[0], 24, 12);
     screen.setScreenSize(128, 64); //设置屏幕分辨率
-    screen.clear();
 
-    UART::InitStruct u;
-    u.bode = 115200;
-    u.uartIdx = 2;
-    u.RxPort = GPIOA;
-    u.RxPin = GPIO_Pin_3;
-    u.RxAF = GPIO_AF_1;
-    u.TxPort = GPIOA;
-    u.TxPin = GPIO_Pin_2;
-    u.TxAF = GPIO_AF_1;
-    UART::UART_Object computer(u);
-    c = &computer;
+    screen.print("hello");
+    // screen.clear();
+    // UART::InitStruct u;
+    // u.bode = 115200;
+    // u.uartIdx = 2;
+    // u.RxPort = GPIOA;
+    // u.RxPin = GPIO_Pin_3;
+    // u.RxAF = GPIO_AF_1;
+    // u.TxPort = GPIOA;
+    // u.TxPin = GPIO_Pin_2;
+    // u.TxAF = GPIO_AF_1;
+    // UART::UART_Object computer(u);
+    // c = &computer;
     //  computer.setNVIC();
     //  computer.setRxFunction(cptRxData);
-    computer.setDMA((uint32_t)pic, 1024, 1, 'r', true, displayPic);
+    // computer.setDMA((uint32_t)pic, 1024, 1, 'r', true, displayPic);
 
     while (1)
     {
-        // int i = 0;
-        // while (i < 20)
-        // {
-        //     screen.Picture_display(a_gif[i++], 0, 0, 64, 128);
-        //     delayMs(100);
-        // }
-
-        // i = 0;
-        // while (i < 45)
-        // {
-        //     screen.Picture_display(mao_gif[i++], 0, 0, 64, 128);
-        //     delayMs(40);
-        // }
-        // screen.Picture_display(pic, 0, 0, 128, 64);
-        // delayMs(500);
     }
 
     return 0;

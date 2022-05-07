@@ -4,12 +4,41 @@ using namespace OLED;
 
 void OLED_Object::sendByte(uint8_t dat, bool isCMD)
 {
+    GPIO_ResetBits(this->CS_Port, this->CS_Pin);
     if (isCMD)
         GPIO_ResetBits(this->DC_Port, this->DC_Pin);
     else
         GPIO_SetBits(this->DC_Port, this->DC_Pin);
 
-    this->sendOneByte(dat);
+    // this->sendOneByte(dat);
+    this->transFunc(dat);
+    GPIO_SetBits(this->CS_Port, this->CS_Pin);
+}
+void OLED_Object::reInit(GPIO_TypeDef *dcPort, uint16_t dcPin,
+                         GPIO_TypeDef *csPort, uint16_t csPin,
+                         GPIO_TypeDef *resPort, uint16_t resPin, void (*f)(uint8_t))
+{
+    GPIO_InitTypeDef gpio;
+    gpio.GPIO_Mode = GPIO_Mode_Out_PP;
+    gpio.GPIO_Speed = GPIO_Speed_50MHz;
+
+    gpio.GPIO_Pin = csPin;
+    GPIO_Init(csPort, &gpio);
+
+    gpio.GPIO_Pin = dcPin;
+    GPIO_Init(dcPort, &gpio);
+    gpio.GPIO_Pin = resPin;
+    GPIO_Init(resPort, &gpio);
+
+    this->CS_Pin = csPin;
+    this->DC_Pin = dcPin;
+    this->RES_Pin = resPin;
+
+    this->CS_Port = csPort;
+    this->DC_Port = dcPort;
+    this->RES_Port = resPort;
+
+    this->transFunc = f;
 }
 
 void OLED_Object::reset(void)

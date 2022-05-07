@@ -25,16 +25,8 @@ void SPI_Object::init(HardInitStruct *hard)
         break;
     }
 
-    gpio.GPIO_Mode = GPIO_Mode_Out_PP;
+
     gpio.GPIO_Speed = GPIO_Speed_50MHz;
-
-    gpio.GPIO_Pin = hard->CS_Pin;
-    GPIO_Init(hard->CS_Port, &gpio);
-    gpio.GPIO_Pin = hard->DC_Pin;
-    GPIO_Init(hard->DC_Port, &gpio);
-    gpio.GPIO_Pin = hard->RES_Pin;
-    GPIO_Init(hard->RES_Port, &gpio);
-
     gpio.GPIO_Mode = GPIO_Mode_AF_PP;
     gpio.GPIO_Pin = hard->MOSI_Pin;
     GPIO_Init(hard->MOSI_Port, &gpio);
@@ -58,15 +50,7 @@ void SPI_Object::init(HardInitStruct *hard)
     SPI_Init(this->spi, &spi);
     SPI_Cmd(this->spi, ENABLE);
     SPI_BiDirectionalLineConfig(this->spi, SPI_Direction_Tx);
-    SPI_BiDirectionalLineConfig(this->spi, SPI_Direction_Rx);
-    this->CS_Pin = hard->CS_Pin;
-    this->DC_Pin = hard->DC_Pin;
-    this->RES_Pin = hard->RES_Pin;
-
-    this->CS_Port = hard->CS_Port;
-    this->DC_Port = hard->DC_Port;
-    this->RES_Port = hard->RES_Port;
-}
+    SPI_BiDirectionalLineConfig(this->spi, SPI_Direction_Rx);}
 
 void SPI_Object::init(SoftInitStruct *soft)
 {
@@ -75,35 +59,39 @@ void SPI_Object::init(SoftInitStruct *soft)
     gpio.GPIO_Mode = GPIO_Mode_Out_PP;
     gpio.GPIO_Speed = GPIO_Speed_50MHz;
 
-    gpio.GPIO_Pin = soft->CS_Pin;
-    GPIO_Init(soft->CS_Port, &gpio);
-    gpio.GPIO_Pin = soft->DC_Pin;
-    GPIO_Init(soft->DC_Port, &gpio);
-    gpio.GPIO_Pin = soft->RES_Pin;
-    GPIO_Init(soft->RES_Port, &gpio);
     gpio.GPIO_Pin = soft->SCLK_Pin;
     GPIO_Init(soft->SCLK_Port, &gpio);
     gpio.GPIO_Pin = soft->MOSI_Pin;
     GPIO_Init(soft->MOSI_Port, &gpio);
 
-    this->CS_Pin = soft->CS_Pin;
-    this->DC_Pin = soft->DC_Pin;
-    this->RES_Pin = soft->RES_Pin;
     this->SCLK_Pin = soft->SCLK_Pin;
     this->MOSI_Pin = soft->MOSI_Pin;
 
-    this->CS_Port = soft->CS_Port;
-    this->DC_Port = soft->DC_Port;
-    this->RES_Port = soft->RES_Port;
     this->MOSI_Port = soft->MOSI_Port;
     this->SCLK_Port = soft->SCLK_Port;
+}
+void SPI_Object::init(GPIO_TypeDef* mosiPort,uint16_t mosiPin,GPIO_TypeDef*sclkPort,uint16_t sclkPin)
+{
+    GPIO_InitTypeDef gpio;
+    this->spi = nullptr;
+    gpio.GPIO_Mode = GPIO_Mode_Out_PP;
+    gpio.GPIO_Speed = GPIO_Speed_50MHz;
+
+    gpio.GPIO_Pin = sclkPin;
+    GPIO_Init(sclkPort, &gpio);
+    gpio.GPIO_Pin = mosiPin;
+    GPIO_Init(mosiPort, &gpio);
+
+    this->SCLK_Pin = sclkPin;
+    this->MOSI_Pin = mosiPin;
+
+    this->SCLK_Port = sclkPort;
+    this->MOSI_Port = mosiPort;
 }
 
 //之后用模板重写
 void SPI_Object::sendOneByte(uint8_t dat)
 {
-    GPIO_ResetBits(this->CS_Port, this->CS_Pin);
-
     if (this->spi != nullptr)
     {
         SPI_SendData(this->spi, dat);
@@ -128,15 +116,12 @@ void SPI_Object::sendOneByte(uint8_t dat)
         }
     }
     delay(2);
-    GPIO_SetBits(this->CS_Port, this->CS_Pin);
 }
 
 template <typename DataType>
 void SPI_Object::sendData(DataType dat)
 {
     uint8_t s = sizeof(dat);
-
-    GPIO_ResetBits(this->CS_Port, this->CS_Pin);
 
     if (this->spi != nullptr)
     {
@@ -169,5 +154,4 @@ void SPI_Object::sendData(DataType dat)
         }
     }
     delay(2);
-    GPIO_SetBits(this->CS_Port, this->CS_Pin);
 }

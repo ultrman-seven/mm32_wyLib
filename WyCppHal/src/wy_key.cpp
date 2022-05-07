@@ -193,3 +193,4 @@ void EXTI4_15_IRQHandler(void)
             extiCallback[15]();
         EXTI_ClearITPendingBit(EXTI_Line15);
     }
+}

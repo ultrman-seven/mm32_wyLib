@@ -533,11 +533,6 @@
               <FileType>8</FileType>
               <FilePath>..\WyLib\OLED\z_gif.cpp</FilePath>
             </File>
-            <File>
-              <FileName>tft.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\WyLib\OLED\tft.cpp</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -567,6 +562,21 @@
               <FileName>wy_tim.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\WyCppHal\src\wy_tim.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>wy_8080.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\WyCppHal\src\wy_8080.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>wy_hardOperation.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\WyCppHal\src\wy_hardOperation.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>wy_key.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\WyCppHal\src\wy_key.cpp</FilePath>
             </File>
           </Files>
         </Group>
