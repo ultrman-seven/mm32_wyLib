@@ -61,11 +61,11 @@ void p_re(char ch)
     s->putChar(ch);
 }
 
-// SPI::SPI_Object *spi = nullptr;
-// void spiSend(uint8_t dat)
-// {
-//     spi->sendData(dat);
-// }
+SPI::SPI_Object *spi = new SPI::SPI_Object(GPIOA, GPIO_Pin_6, GPIO_Pin_4);
+void spiSend(uint8_t dat)
+{
+    spi->sendOneByte(dat);
+}
 
 intel8080::Intel8080_Object *i_8080 = nullptr;
 void send8080(uint8_t dat)
@@ -83,30 +83,25 @@ int main(void)
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
     // std::vector<uint8_t> dat(10, 23);
 
-    // OLED::OLED_Object screen(&oledSoft);
-    // SPI::SPI_Object spi4oled(GPIOA, GPIO_Pin_6, GPIO_Pin_4);
-    // spi = &spi4oled;
+    // intel8080::Intel8080_Object i8080_4oled;
+    // i8080_4oled.pinStr.dataHigh = false;
+    // i8080_4oled.pinStr.dataPort = GPIOA;
+    // i8080_4oled.pinStr.rdPort = GPIOA;
+    // i8080_4oled.pinStr.wtPort = GPIOB;
+    // i8080_4oled.pinStr.rdPin = GPIO_Pin_12;
+    // i8080_4oled.pinStr.wtPin = GPIO_Pin_10;
+    // i8080_4oled.init();
+    // i_8080 = &i8080_4oled;
 
-    intel8080::Intel8080_Object i8080_4oled;
-    i8080_4oled.pinStr.dataHigh = false;
-    i8080_4oled.pinStr.dataPort = GPIOA;
-    i8080_4oled.pinStr.rdPort = GPIOA;
-    i8080_4oled.pinStr.wtPort = GPIOB;
-    i8080_4oled.pinStr.rdPin = GPIO_Pin_12;
-    i8080_4oled.pinStr.wtPin = GPIO_Pin_10;
-    i8080_4oled.init();
-    i_8080 = &i8080_4oled;
-
-    OLED::OLED_Object screen(GPIOA, GPIO_Pin_10, GPIOB, GPIO_Pin_11, GPIOA, GPIO_Pin_11, send8080);
-    // screen.loadTransFun(spiSend);
-    // screen.loadTransFun(send8080);
+    // OLED::OLED_Object screen(GPIOA, GPIO_Pin_10, GPIOB, GPIO_Pin_11, GPIOA, GPIO_Pin_11, send8080);
+    OLED::OLED_Object screen(GPIOB, GPIO_Pin_10, GPIOA, GPIO_Pin_5, GPIOB, GPIO_Pin_11, spiSend);
     s = &screen;
     screen.loadFont(ASCII[0], 16, 8); //装载字体
     // screen.loadFont(ASCII_24_12[0], 24, 12);
     screen.setScreenSize(128, 64); //设置屏幕分辨率
 
+    screen.clear();
     screen.print("hello");
-    // screen.clear();
     // UART::InitStruct u;
     // u.bode = 115200;
     // u.uartIdx = 2;

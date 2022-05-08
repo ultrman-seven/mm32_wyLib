@@ -46,6 +46,7 @@ void Intel8080_Object::sendByte(uint8_t dat)
     }
 
     GPIO_ResetBits(this->pinStr.wtPort, this->pinStr.wtPin);
-    delay(5);
+    // delayMs(10);
+    delay(3);
     GPIO_SetBits(this->pinStr.wtPort, this->pinStr.wtPin);
 }

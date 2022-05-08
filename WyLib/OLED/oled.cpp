@@ -39,6 +39,7 @@ void OLED_Object::reInit(GPIO_TypeDef *dcPort, uint16_t dcPin,
     this->RES_Port = resPort;
 
     this->transFunc = f;
+    this->reset();
 }
 
 void OLED_Object::reset(void)

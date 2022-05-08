@@ -38,12 +38,12 @@ namespace SPI
         void init(HardInitStruct *h);
         void init(SoftInitStruct *s);
         void init(GPIO_TypeDef *mosiPort, uint16_t mosiPin, GPIO_TypeDef *sclkPort, uint16_t sclkPin);
-        void sendOneByte(uint8_t dat);
         // void sendData(uint8_t dat) {sendOneByte(dat);}
         // void sendData(uint16_t dat);
         // void sendData(uint32_t dat);
 
     public:
+        void sendOneByte(uint8_t dat);
         template <typename DataType>
         void sendData(DataType dat);
         SPI_Object(/* args */) = default;
