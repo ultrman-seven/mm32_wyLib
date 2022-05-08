@@ -11,7 +11,8 @@ void OLED_Object::sendByte(uint8_t dat, bool isCMD)
         GPIO_SetBits(this->DC_Port, this->DC_Pin);
 
     // this->sendOneByte(dat);
-    this->transFunc(dat);
+    if (this->transFunc != nullptr)
+        this->transFunc(dat);
     GPIO_SetBits(this->CS_Port, this->CS_Pin);
 }
 void OLED_Object::reInit(GPIO_TypeDef *dcPort, uint16_t dcPin,

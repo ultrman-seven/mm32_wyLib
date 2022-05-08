@@ -2,8 +2,6 @@
 
 using namespace SPI;
 
-SPI_Object::~SPI_Object() {}
-
 void SPI_Object::init(HardInitStruct *hard)
 {
     GPIO_InitTypeDef gpio;
@@ -24,7 +22,6 @@ void SPI_Object::init(HardInitStruct *hard)
         return;
         break;
     }
-
 
     gpio.GPIO_Speed = GPIO_Speed_50MHz;
     gpio.GPIO_Mode = GPIO_Mode_AF_PP;
@@ -50,7 +47,8 @@ void SPI_Object::init(HardInitStruct *hard)
     SPI_Init(this->spi, &spi);
     SPI_Cmd(this->spi, ENABLE);
     SPI_BiDirectionalLineConfig(this->spi, SPI_Direction_Tx);
-    SPI_BiDirectionalLineConfig(this->spi, SPI_Direction_Rx);}
+    SPI_BiDirectionalLineConfig(this->spi, SPI_Direction_Rx);
+}
 
 void SPI_Object::init(SoftInitStruct *soft)
 {
@@ -70,7 +68,7 @@ void SPI_Object::init(SoftInitStruct *soft)
     this->MOSI_Port = soft->MOSI_Port;
     this->SCLK_Port = soft->SCLK_Port;
 }
-void SPI_Object::init(GPIO_TypeDef* mosiPort,uint16_t mosiPin,GPIO_TypeDef*sclkPort,uint16_t sclkPin)
+void SPI_Object::init(GPIO_TypeDef *mosiPort, uint16_t mosiPin, GPIO_TypeDef *sclkPort, uint16_t sclkPin)
 {
     GPIO_InitTypeDef gpio;
     this->spi = nullptr;
@@ -118,6 +116,7 @@ void SPI_Object::sendOneByte(uint8_t dat)
     delay(2);
 }
 
+#if 0
 template <typename DataType>
 void SPI_Object::sendData(DataType dat)
 {
@@ -155,3 +154,4 @@ void SPI_Object::sendData(DataType dat)
     }
     delay(2);
 }
+#endif

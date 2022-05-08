@@ -30,8 +30,8 @@ namespace SPI
 
     class SPI_Object
     {
-    private:
     protected:
+    private:
         uint16_t SCLK_Pin, MOSI_Pin;
         GPIO_TypeDef *SCLK_Port, *MOSI_Port;
         SPI_TypeDef *spi;
@@ -43,9 +43,8 @@ namespace SPI
         // void sendData(uint32_t dat);
 
     public:
-        void sendOneByte(uint8_t dat);
-        template <typename DataType>
-        void sendData(DataType dat);
+        // template <typename DataType>
+        // void sendData(DataType dat);
         SPI_Object(/* args */) = default;
         SPI_Object(HardInitStruct *h) { init(h); };
         SPI_Object(SoftInitStruct *s) { init(s); };
@@ -59,7 +58,7 @@ namespace SPI
             init(port, mosiPin, port, sclkPin);
         };
 
-        ~SPI_Object();
+        void sendOneByte(uint8_t dat);
     };
 
 } // namespace SPI

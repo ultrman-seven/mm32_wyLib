@@ -7,11 +7,7 @@
 #include <stdio.h>
 #include <vector>
 
-// extern const uint8_t qe_gif[][1024];
-// extern const uint8_t mao_gif[][1024];
-extern const uint8_t a_gif[][1024];
 OLED::OLED_Object *s = nullptr;
-UART::UART_Object *c = nullptr;
 ErrorStatus HSE_SysClock(void)
 {
     ErrorStatus HSE_StartUpState = ERROR;
@@ -36,41 +32,15 @@ ErrorStatus HSE_SysClock(void)
     return HSE_StartUpState;
 }
 
-uint8_t pic[1024] = {0};
-
-void displayPic(void)
-{
-    // s->clear();
-    s->Picture_display(pic, 0, 0, 64, 128);
-    c->DMA_On(true);
-}
-
-uint8_t *picPtr = pic;
-void cptRxData(void)
-{
-    *picPtr++ = c->receiveByte();
-    if ((picPtr - pic) == 1024)
-    {
-        s->Picture_display(pic, 0, 0, 64, 128);
-        picPtr = pic;
-    }
-}
-
 void p_re(char ch)
 {
     s->putChar(ch);
 }
 
-SPI::SPI_Object *spi = new SPI::SPI_Object(GPIOA, GPIO_Pin_6, GPIO_Pin_4);
+SPI::SPI_Object *spi4Oled = nullptr;
 void spiSend(uint8_t dat)
 {
-    spi->sendOneByte(dat);
-}
-
-intel8080::Intel8080_Object *i_8080 = nullptr;
-void send8080(uint8_t dat)
-{
-    i_8080->sendByte(dat);
+    spi4Oled->sendOneByte(dat);
 }
 
 int main(void)
@@ -81,8 +51,8 @@ int main(void)
 
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
-    // std::vector<uint8_t> dat(10, 23);
 
+    spi4Oled = new SPI::SPI_Object(GPIOA, GPIO_Pin_6, GPIO_Pin_4);
     // intel8080::Intel8080_Object i8080_4oled;
     // i8080_4oled.pinStr.dataHigh = false;
     // i8080_4oled.pinStr.dataPort = GPIOA;
@@ -97,25 +67,18 @@ int main(void)
     OLED::OLED_Object screen(GPIOB, GPIO_Pin_10, GPIOA, GPIO_Pin_5, GPIOB, GPIO_Pin_11, spiSend);
     s = &screen;
     screen.loadFont(ASCII[0], 16, 8); //装载字体
-    // screen.loadFont(ASCII_24_12[0], 24, 12);
-    screen.setScreenSize(128, 64); //设置屏幕分辨率
+    screen.setScreenSize(128, 64);    //设置屏幕分辨率
 
     screen.clear();
-    screen.print("hello");
-    // UART::InitStruct u;
-    // u.bode = 115200;
-    // u.uartIdx = 2;
-    // u.RxPort = GPIOA;
-    // u.RxPin = GPIO_Pin_3;
-    // u.RxAF = GPIO_AF_1;
-    // u.TxPort = GPIOA;
-    // u.TxPin = GPIO_Pin_2;
-    // u.TxAF = GPIO_AF_1;
-    // UART::UART_Object computer(u);
-    // c = &computer;
-    //  computer.setNVIC();
-    //  computer.setRxFunction(cptRxData);
-    // computer.setDMA((uint32_t)pic, 1024, 1, 'r', true, displayPic);
+    screen.print("hello csb");
+
+    GPIO_InitTypeDef gpio;
+    gpio.GPIO_Mode = GPIO_Mode_Out_PP;
+    gpio.GPIO_Speed = GPIO_Speed_50MHz;
+    gpio.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
+    GPIO_Init(GPIOB, &gpio);
+    GPIO_ResetBits(GPIOB, GPIO_Pin_0);
+    GPIO_ResetBits(GPIOB, GPIO_Pin_1);
 
     while (1)
     {
