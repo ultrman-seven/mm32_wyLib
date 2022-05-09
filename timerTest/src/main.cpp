@@ -63,35 +63,33 @@ void timUpdate(void)
         hour = 0;
         day++;
     }
-    s->clear();
-    printf("day%d time:\n%dh %dm %d.%ds", day, hour, min, sec, hunMs);
+    // s->clear();
+    // printf("day%d time:\n%dh %dm %d.%ds", day, hour, min, sec, hunMs);
+    sprintf(s->str, "%2d%2d%2d%2d%d", day, hour, min, sec, hunMs);
+    s->placeFill(s->str);
 }
 
+SPI::SPI_Object *spi4Oled = nullptr;
+void spiSend(uint8_t dat)
+{
+    spi4Oled->sendOneByte(dat);
+}
 int main(void)
 {
     HSE_SysClock();
     sysConfig::redirect_Printf(p_re);
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
-
-    SPI::SoftInitStruct oledSoft;
-    oledSoft.CS_Pin = GPIO_Pin_5;
-    oledSoft.CS_Port = GPIOA;
-    oledSoft.DC_Pin = GPIO_Pin_10;
-    oledSoft.DC_Port = GPIOB;
-    oledSoft.MOSI_Pin = GPIO_Pin_6;
-    oledSoft.MOSI_Port = GPIOA;
-    oledSoft.RES_Pin = GPIO_Pin_11;
-    oledSoft.RES_Port = GPIOB;
-    oledSoft.SCLK_Pin = GPIO_Pin_4;
-    oledSoft.SCLK_Port = GPIOA;
-
     delayInit();
-    OLED::OLED_Object screen(&oledSoft);
+
+    spi4Oled = new SPI::SPI_Object(GPIOA, GPIO_Pin_6, GPIO_Pin_4);
+
+    OLED::OLED_Object screen(GPIOB, GPIO_Pin_10, GPIOA, GPIO_Pin_5, GPIOB, GPIO_Pin_11, spiSend);
     s = &screen;
     screen.loadFont(ASCII[0], 16, 8); //装载字体
     screen.setScreenSize(128, 64);    //设置屏幕分辨率
     screen.clear();
+    screen.print("day\a\a time:\n\a\ah \a\am \a\a.\as");
 
     TIM::TIM_Base_Object timer(16);
     timer.setMsCountTime(100);

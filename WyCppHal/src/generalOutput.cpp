@@ -15,10 +15,14 @@ void generalOutputBase::putChar(char ch)
     {
     case '\n':
         line += asciiHigh / 8;
-        wordCount = -1;
-        break;
+        wordCount = 0;
+        return;
     case '\b':
         wordCount--;
+        break;
+    case '\a':
+        char_display(font, chooseLine == line);
+        (this->placeHolder)[line / (asciiHigh / 8)].push_back(wordCount);
         break;
     case 127:
         break;
@@ -81,5 +85,26 @@ void generalOutputBase::setScreenSize(uint8_t width, uint8_t height)
 {
     maxWord = width / asciiWide;
     // maxLine = height / asciiHigh;
-    maxLine = height/8;
+    maxLine = height / 8;
+    this->placeHolder.resize(maxLine);
+    // this->placeHolder = new std::vector<std::vector<uint8_t> >(maxLine);
+    for (auto &i : this->placeHolder)
+        i = std::vector<uint8_t>(0);
 };
+
+void generalOutputBase::clearPlaceHolder(void)
+{
+    for (auto i : this->placeHolder)
+        i.clear();
+}
+
+void generalOutputBase::placeFill(char *s)
+{
+    uint8_t l = 0;
+    while (l <= maxLine/(asciiHigh / 8))
+    {
+        for (auto w : (this->placeHolder[l]))
+            char_display(font + fontUnitSize * (*s++ - 32), chooseLine == line, l*(asciiHigh / 8), w);
+        l ++;
+    }
+}

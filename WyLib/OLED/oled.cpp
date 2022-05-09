@@ -106,12 +106,12 @@ void OLED_Object::Picture_display(const uint8_t *ptr_pic, uint8_t colStart, uint
     }
 }
 
-void OLED_Object::char_display(const uint8_t *ptr_pic, bool contrast)
+void OLED_Object::char_display(const uint8_t *ptr_pic, bool contrast,uint8_t l,uint8_t word)
 {
     uint8_t page, column;
-    for (page = line; page < line + (asciiHigh / 8); page++) // page loop
+    for (page = l; page < l + (asciiHigh / 8); page++) // page loop
     {
-        this->setCol(wordCount * asciiWide);
+        this->setCol(word * asciiWide);
         setPage(page);
         for (column = 0; column < asciiWide; column++) // column loop
             if (contrast)

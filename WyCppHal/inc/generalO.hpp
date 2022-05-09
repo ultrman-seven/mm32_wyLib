@@ -1,6 +1,6 @@
 #ifndef __WY_LIB_CPP_GEN_OUT_H__
 #define __WY_LIB_CPP_GEN_OUT_H__
-
+#include "vector"
 namespace genO
 {
     // struct ChooseLine
@@ -10,13 +10,19 @@ namespace genO
         const uint8_t *font;
         uint8_t asciiHigh, asciiWide, fontUnitSize;
         uint8_t maxWord = 16, maxLine = 4;
-        uint8_t line = 0;
-        char wordCount = 0;
-        virtual void char_display(const uint8_t *ptr_pic, bool contrast) = 0;
+        uint8_t line = 0, wordCount = 0;
+        virtual void char_display(const uint8_t *ptr_pic, bool contrast, uint8_t l, uint8_t word) = 0;
+        void char_display(const uint8_t *ptr_pic, bool contrast)
+        {
+            char_display(ptr_pic, contrast, this->line, this->wordCount);
+        }
+        void clearPlaceHolder(void);
 
     private:
+        std::vector<std::vector<uint8_t> > placeHolder;
+
     public:
-        class// ChooseLine
+        class // ChooseLine
         {
         private:
             char val = -1;
@@ -24,7 +30,6 @@ namespace genO
 
         public:
             void setStep(uint8_t step) { this->step = step; };
-            //ChooseLine() = default;
             bool operator==(uint8_t v) { return this->val == v; }
             bool operator!=(uint8_t v) { return this->val != v; }
             void operator++(void) { this->val += this->step; }
@@ -39,6 +44,7 @@ namespace genO
         void putNum(__IO int num);
         void putNum(__IO int num, uint8_t decimalPlaces);
         void print(char *s);
+        void placeFill(char *);
         // void left(void);
         // void left(uint8_t len);
         // void up(void);

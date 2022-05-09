@@ -70,7 +70,8 @@ int main(void)
     screen.setScreenSize(128, 64);    //设置屏幕分辨率
 
     screen.clear();
-    screen.print("hello csb");
+    screen.print("he\al\alo\a");
+    screen.placeFill("666");
 
     GPIO_InitTypeDef gpio;
     gpio.GPIO_Mode = GPIO_Mode_Out_PP;
