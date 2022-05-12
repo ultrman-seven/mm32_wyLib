@@ -15,7 +15,7 @@ namespace intel8080
             bool dataHigh;
         } pinStr;
 
-        Intel8080_Object() = default;
+        Intel8080_Object() {}
         void init(void);
         void sendByte(uint8_t dat);
     };

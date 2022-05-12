@@ -1,6 +1,38 @@
 #include "common.h"
 #include "stdio.h"
+#include "vector"
 // #include "iostream"
+
+void (*printFunction)(char c) = nullptr;
+
+namespace sys
+{
+    void redirect_Printf(void (*f)(char))
+    {
+        printFunction = f;
+    }
+
+    std::vector<void (*)(void)> funList(0);
+    void runFunList(void)
+    {
+        for (auto i : funList)
+            if (i != nullptr)
+                i();
+    }
+
+    void throwFun2Main(void (*f)(void))
+    {
+        funList.push_back(f);
+    }
+
+    void delFun(void (*f)(void))
+    {
+        for (auto i = funList.begin(); i != funList.end(); i++)
+            if (*i == f)
+                funList.erase(i);
+    }
+} // namespace sys
+
 #pragma import(__use_no_semihosting)
 
 extern "C"
@@ -15,12 +47,6 @@ extern "C"
     void _ttywrch(int ch)
     {
     }
-}
-void (*printFunction)(char c) = nullptr;
-
-void sysConfig::redirect_Printf(void (*f)(char))
-{
-    printFunction = f;
 }
 
 namespace std
@@ -70,7 +96,7 @@ void delayInit(void)
 void delay(__IO uint32_t time)
 {
     while (time--)
-        ;//__nop();
+        ; //__nop();
 }
 
 void delayMs(uint32_t time)
