@@ -48,7 +48,7 @@ void IIC_Object::iic_delay(void)
 {
     __IO uint8_t i = 5;
     while (i--)
-        __nop();
+        ;//__nop();
 }
 
 bool IIC_Object::start(void)

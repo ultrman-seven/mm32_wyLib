@@ -89,12 +89,12 @@ void UART_Object::setDMA(uint32_t add, uint16_t size, uint8_t priority, char mod
     NVIC_InitTypeDef nvic;
     switch ((uint32_t)(this->uart))
     {
-    case (uint32_t)UART1:
+    case UART1_BASE:
         this->dmaChannel = DMA1_Channel3;
         dmaCh3IntFun = f;
         nvic.NVIC_IRQChannel = DMA1_Channel2_3_IRQn;
         break;
-    case (uint32_t)UART2:
+    case UART2_BASE:
         this->dmaChannel = DMA1_Channel5;
         dmaCh5IntFun = f;
         nvic.NVIC_IRQChannel = DMA1_Channel4_5_IRQn;
@@ -133,10 +133,10 @@ void UART_Object::setDMA_InterruptFunction(void (*f)(void))
 {
     switch ((uint32_t)(this->uart))
     {
-    case (uint32_t)UART1:
+    case UART1_BASE:
         dmaCh3IntFun = f;
         break;
-    case (uint32_t)UART2:
+    case UART2_BASE:
         dmaCh5IntFun = f;
         break;
     default:
@@ -148,7 +148,7 @@ void DMA1_Channel2_3_IRQHandler(void)
     if (DMA_GetITStatus(DMA1_IT_TC3) == SET)
     {
         DMA_ClearITPendingBit(DMA1_IT_TC3);
-        DMA_Cmd(DMA1_Channel3, DISABLE);
+        // DMA_Cmd(DMA1_Channel3, DISABLE);
         if (dmaCh3IntFun != nullptr)
             dmaCh3IntFun();
     }
@@ -158,7 +158,7 @@ void DMA1_Channel4_5_IRQHandler(void)
     if (DMA_GetITStatus(DMA1_IT_TC5) == SET)
     {
         DMA_ClearITPendingBit(DMA1_IT_TC5);
-        DMA_Cmd(DMA1_Channel5, DISABLE);
+        // DMA_Cmd(DMA1_Channel5, DISABLE);
         if (dmaCh5IntFun != nullptr)
             dmaCh5IntFun();
     }

@@ -6,9 +6,9 @@ namespace SPI
 
     typedef struct
     {
-        uint16_t DC_Pin, RES_Pin, CS_Pin, SCLK_Pin, MOSI_Pin;
+        uint16_t DC_Pin, RES_Pin, CS_Pin, SCLK_Pin, MOSI_Pin, MISO_Pin;
 
-        GPIO_TypeDef *DC_Port, *RES_Port, *CS_Port, *SCLK_Port, *MOSI_Port;
+        GPIO_TypeDef *DC_Port, *RES_Port, *CS_Port, *SCLK_Port, *MOSI_Port, *MISO_Port;
 
         // uint32_t DC_RCC, CS_RCC, RES_RCC, SCLK_RCC, MOSI_RCC;
         // vector<uint32_t>* GPIO_RCCs;
@@ -17,23 +17,20 @@ namespace SPI
 
     typedef struct
     {
-        uint16_t SCLK_Pin, MOSI_Pin;
+        uint16_t SCLK_Pin, MOSI_Pin, MISO_Pin;
 
-        GPIO_TypeDef *SCLK_Port, *MOSI_Port;
+        GPIO_TypeDef *SCLK_Port, *MOSI_Port, *MISO_Port;
 
-        // uint32_t DC_RCC, CS_RCC, RES_RCC, SCLK_RCC, MOSI_RCC;
-        // vector<uint32_t>* GPIO_RCCs;
         uint8_t Spi_Num;
-        // uint8_t SCLK_PinSource, MOSI_PinSource;
-        uint8_t SCLK_AF, MOSI_AF;
+        uint8_t SCLK_AF, MOSI_AF, MISO_AF;
     } HardInitStruct;
 
     class SPI_Object
     {
     protected:
     private:
-        uint16_t SCLK_Pin, MOSI_Pin;
-        GPIO_TypeDef *SCLK_Port, *MOSI_Port;
+        uint16_t SCLK_Pin, MOSI_Pin,MISO_Pin;
+        GPIO_TypeDef *SCLK_Port, *MOSI_Port,*MISO_Port;
         SPI_TypeDef *spi;
         void init(HardInitStruct *h);
         void init(SoftInitStruct *s);

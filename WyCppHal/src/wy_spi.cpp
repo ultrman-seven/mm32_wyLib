@@ -7,6 +7,13 @@ void SPI_Object::init(HardInitStruct *hard)
     GPIO_InitTypeDef gpio;
     SPI_InitTypeDef spi;
 
+    uint8_t SCLK_PinSource = pin2pinSource(hard->SCLK_Pin);
+    uint8_t MOSI_PinSource = pin2pinSource(hard->MOSI_Pin);
+    uint8_t MISO_PinSource = pin2pinSource(hard->MISO_Pin);
+
+    GPIO_PinAFConfig(hard->SCLK_Port, SCLK_PinSource, hard->SCLK_AF);
+    GPIO_PinAFConfig(hard->MOSI_Port, MOSI_PinSource, hard->MOSI_AF);
+
     switch (hard->Spi_Num)
     {
     case 1:
@@ -20,7 +27,6 @@ void SPI_Object::init(HardInitStruct *hard)
 
     default:
         return;
-        break;
     }
 
     gpio.GPIO_Speed = GPIO_Speed_50MHz;
@@ -29,12 +35,9 @@ void SPI_Object::init(HardInitStruct *hard)
     GPIO_Init(hard->MOSI_Port, &gpio);
     gpio.GPIO_Pin = hard->SCLK_Pin;
     GPIO_Init(hard->SCLK_Port, &gpio);
-
-    uint8_t SCLK_PinSource = pin2pinSource(SCLK_Pin);
-    uint8_t MOSI_PinSource = pin2pinSource(MOSI_Pin);
-
-    GPIO_PinAFConfig(hard->SCLK_Port, SCLK_PinSource, hard->SCLK_AF);
-    GPIO_PinAFConfig(hard->MOSI_Port, MOSI_PinSource, hard->MOSI_AF);
+    gpio.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+    gpio.GPIO_Pin = hard->MISO_Pin;
+    // GPIO_Init(hard->MISO_Port, &gpio);
 
     spi.SPI_NSS = SPI_NSS_Soft;
     spi.SPI_Mode = SPI_Mode_Master;
@@ -92,9 +95,9 @@ void SPI_Object::sendOneByte(uint8_t dat)
 {
     if (this->spi != nullptr)
     {
-        SPI_SendData(this->spi, dat);
-        while (!SPI_GetFlagStatus(this->spi, SPI_FLAG_TXEPT))
-            ;
+        SPI_SendData(this->spi, (uint32_t)dat);
+        // while (!SPI_GetFlagStatus(this->spi, SPI_FLAG_TXEPT))
+        //     ;
     }
     else
     {
@@ -113,7 +116,7 @@ void SPI_Object::sendOneByte(uint8_t dat)
             GPIO_ResetBits(this->SCLK_Port, this->SCLK_Pin);
         }
     }
-    delay(2);
+    // delay(2);
 }
 
 #if 0

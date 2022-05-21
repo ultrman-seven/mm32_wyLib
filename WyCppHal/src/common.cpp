@@ -34,7 +34,7 @@ namespace sys
 } // namespace sys
 
 #pragma import(__use_no_semihosting)
-
+// __asm(".global __use_no_semihosting\n\t");
 extern "C"
 {
     void _sys_exit(int returncode)
@@ -53,7 +53,7 @@ namespace std
 {
     struct __FILE
     {
-        int handle;
+       int handle;
         /* Whatever you require here. If the only file you are using is */
         /* standard output using printf() for debugging, no file handling */
         /* is required. */
