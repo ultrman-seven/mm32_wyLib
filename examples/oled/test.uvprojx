@@ -578,6 +578,11 @@
               <FileType>8</FileType>
               <FilePath>..\..\WyCppHal\src\wy_key.cpp</FilePath>
             </File>
+            <File>
+              <FileName>wy_gpio.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\WyCppHal\src\wy_gpio.cpp</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

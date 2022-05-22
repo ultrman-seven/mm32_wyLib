@@ -76,7 +76,7 @@ void spiSend(uint8_t dat)
 }
 int main(void)
 {
-    HSE_SysClock();
+    //HSE_SysClock();
     sys::redirect_Printf(p_re);
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);

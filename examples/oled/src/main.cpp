@@ -4,6 +4,7 @@
 #include "wy_uart.hpp"
 #include "font.hpp"
 #include "wy_8080.hpp"
+#include "wy_gpio.hpp"
 #include <stdio.h>
 #include <vector>
 //#include "Dense"
@@ -79,38 +80,34 @@ void main(void)
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
 
     SPI::HardInitStruct h;
-    // h.Spi_Num = 1;
-    // h.MOSI_Pin = GPIO_Pin_7;
-    // h.MOSI_Port = GPIOA;
-    // h.MOSI_AF = GPIO_AF_0;
-    // h.SCLK_AF = GPIO_AF_1;
-    // h.SCLK_Port = GPIOA;
-    // h.SCLK_Pin = GPIO_Pin_4;
 
-    h.Spi_Num = 2;
-    h.MOSI_Pin = GPIO_Pin_13;
-    h.MOSI_Port = GPIOB;
+    h.miso = "b15";
+    h.mosi = "b13";
+    h.sclk = "b14";
     h.MOSI_AF = GPIO_AF_4;
     h.SCLK_AF = GPIO_AF_3;
-    h.SCLK_Port = GPIOB;
-    h.SCLK_Pin = GPIO_Pin_14;
+    h.MISO_AF = GPIO_AF_3;
+    h.Spi_Num = 2;
+    
 
     spi4Oled = new SPI::SPI_Object(&h);
     // spi4Oled = new SPI::SPI_Object(GPIOA, GPIO_Pin_7, GPIO_Pin_4);
-    // spi4Oled = new SPI::SPI_Object(GPIOB, GPIO_Pin_13, GPIO_Pin_14);
 
-    i8080_4oled = new intel8080::Intel8080_Object;
+    // spi4Oled = new SPI::SPI_Object(GPIOB, GPIO_Pin_13, GPIO_Pin_14);
+    // spi4Oled = new SPI::SPI_Object('b', 13, 'b', 15, 'b', 14);
+
+    /*i8080_4oled = new intel8080::Intel8080_Object;
     i8080_4oled->pinStr.dataHigh = false;
     i8080_4oled->pinStr.dataPort = GPIOA;
     i8080_4oled->pinStr.rdPort = GPIOC;
     i8080_4oled->pinStr.wtPort = GPIOC;
     i8080_4oled->pinStr.rdPin = GPIO_Pin_0;
     i8080_4oled->pinStr.wtPin = GPIO_Pin_1;
-    i8080_4oled->init();
+    i8080_4oled->init();*/
 
-    OLED::OLED_Object screen(GPIOC, GPIO_Pin_3, GPIOC, GPIO_Pin_2, GPIOC, GPIO_Pin_5, i8080Send);
+    // OLED::OLED_Object screen(GPIOC, GPIO_Pin_3, GPIOC, GPIO_Pin_2, GPIOC, GPIO_Pin_5, i8080Send);
     // OLED::OLED_Object screen(GPIOB, GPIO_Pin_10, GPIOA, GPIO_Pin_5, GPIOB, GPIO_Pin_11, spiSend);
-    // OLED::OLED_Object screen(GPIOA, GPIO_Pin_12, GPIOB, GPIO_Pin_12, GPIOA, GPIO_Pin_9, spiSend);
+    OLED::OLED_Object screen(GPIOA, GPIO_Pin_12, GPIOB, GPIO_Pin_12, GPIOA, GPIO_Pin_9, spiSend);
     s = &screen;
     screen.loadFont(ASCII[0], 16, 8); //装载字体
     screen.setScreenSize(128, 64);    //设置屏幕分辨率
@@ -133,13 +130,9 @@ void main(void)
     screen.print(e == SUCCESS ? "HSE ok\n" : "HES not ok\n");
     screen.print("abc");
 
-    // GPIO_InitTypeDef gpio;
-    // gpio.GPIO_Mode = GPIO_Mode_Out_PP;
-    // gpio.GPIO_Speed = GPIO_Speed_50MHz;
-    // gpio.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
-    // GPIO_Init(GPIOB, &gpio);
-    // GPIO_ResetBits(GPIOB, GPIO_Pin_0);
-    // GPIO_ResetBits(GPIOB, GPIO_Pin_1);
+    GPIO::Gpio_Object led("c9");
+    led = 0;
+
     // Eigen::MatrixXi m(2, 2);
     // m << 1, 2, 3, 4;
 
