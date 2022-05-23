@@ -88,13 +88,9 @@ void main(void)
     h.SCLK_AF = GPIO_AF_3;
     h.MISO_AF = GPIO_AF_3;
     h.Spi_Num = 2;
-    
 
     spi4Oled = new SPI::SPI_Object(&h);
-    // spi4Oled = new SPI::SPI_Object(GPIOA, GPIO_Pin_7, GPIO_Pin_4);
-
-    // spi4Oled = new SPI::SPI_Object(GPIOB, GPIO_Pin_13, GPIO_Pin_14);
-    // spi4Oled = new SPI::SPI_Object('b', 13, 'b', 15, 'b', 14);
+    // spi4Oled = new SPI::SPI_Object("b13", "b15", "b14");
 
     /*i8080_4oled = new intel8080::Intel8080_Object;
     i8080_4oled->pinStr.dataHigh = false;
@@ -105,16 +101,12 @@ void main(void)
     i8080_4oled->pinStr.wtPin = GPIO_Pin_1;
     i8080_4oled->init();*/
 
-    // OLED::OLED_Object screen(GPIOC, GPIO_Pin_3, GPIOC, GPIO_Pin_2, GPIOC, GPIO_Pin_5, i8080Send);
-    // OLED::OLED_Object screen(GPIOB, GPIO_Pin_10, GPIOA, GPIO_Pin_5, GPIOB, GPIO_Pin_11, spiSend);
-    OLED::OLED_Object screen(GPIOA, GPIO_Pin_12, GPIOB, GPIO_Pin_12, GPIOA, GPIO_Pin_9, spiSend);
+    OLED::OLED_Object screen("a12", "b12", "a9", spiSend);
     s = &screen;
     screen.loadFont(ASCII[0], 16, 8); //装载字体
     screen.setScreenSize(128, 64);    //设置屏幕分辨率
 
     screen.clear();
-    // screen.print("he\al\alo\a");
-    // screen.placeFill("666");
     UART::InitStruct u;
     u.bode = 115200;
     u.uartIdx = 1;
@@ -131,13 +123,11 @@ void main(void)
     screen.print("abc");
 
     GPIO::Gpio_Object led("c9");
-    led = 0;
-
-    // Eigen::MatrixXi m(2, 2);
-    // m << 1, 2, 3, 4;
-
-    // screen.putNum(m(1, 1));
     while (1)
     {
+        led = 0;
+        delayMs(500);
+        led = 1;
+        delayMs(500);
     }
 }

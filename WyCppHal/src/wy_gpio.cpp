@@ -29,9 +29,10 @@ void Gpio_Object::familyInit(char port, uint8_t pin, bool rccOn)
 
     this->port = (GPIO_TypeDef *)gpios[tmp];
 }
-void Gpio_Object::familyInit(const char* n, bool rccOn){
-        uint8_t tmp;
-    this->pin_source = getPinFromStr(n+1);
+void Gpio_Object::familyInit(const char *n, bool rccOn)
+{
+    uint8_t tmp;
+    this->pin_source = getPinFromStr(n + 1);
     this->pin = 0x0001 << (this->pin_source);
     if (*n >= 'a' && *n <= 'd')
         tmp = *n - 'a';
@@ -57,7 +58,7 @@ void Gpio_Object::setOnOff(bool on)
     if (on)
         this->port->BSRR = this->pin;
     else
-        this->port->BRR == this->pin;
+        this->port->BRR = this->pin;
 }
 
 uint8_t Gpio_Object::read(void)
@@ -82,10 +83,7 @@ namespace GPIO
             tmp = port - 'A';
         GPIO_Init((GPIO_TypeDef *)gpios[tmp], &gpio);
     }
-    void modeConfig(char port, uint8_t pin, GPIOMode_TypeDef m)
-    {
-        modeConfig(port, pin, m, GPIO_Speed_50MHz);
-    }
+
     void afConfig(char port, uint8_t pin, uint8_t af, GPIOMode_TypeDef m, GPIOSpeed_TypeDef s)
     {
         GPIO_InitTypeDef gpio;
@@ -100,7 +98,7 @@ namespace GPIO
         GPIO_Init((GPIO_TypeDef *)gpios[tmp], &gpio);
         GPIO_PinAFConfig((GPIO_TypeDef *)gpios[tmp], pin, af);
     }
-    void afConfig(const char* g, uint8_t af, GPIOMode_TypeDef m, GPIOSpeed_TypeDef s)
+    void afConfig(const char *g, uint8_t af, GPIOMode_TypeDef m, GPIOSpeed_TypeDef s)
     {
         GPIO_InitTypeDef gpio;
         uint8_t tmp;

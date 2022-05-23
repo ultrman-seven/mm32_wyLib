@@ -72,11 +72,7 @@ void SPI_Object::sendOneByte(uint8_t dat)
         for (cnt = 0; cnt < 8; cnt++)
         {
             this->sclk->reset();
-            *(this->mosi) = ((dat & 0x80) >> 7);
-            if ((dat & 0x80) >> 7)
-                this->mosi->set();
-            else
-                this->mosi->reset();
+            *this->mosi = ((dat & 0x80) >> 7);
             dat = dat << 1;
             delay(3);
             this->sclk->set();
@@ -86,6 +82,12 @@ void SPI_Object::sendOneByte(uint8_t dat)
     }
 
     // delay(2);
+}
+
+uint8_t SPI_Object::read(void)
+{
+    if(this->spi!= nullptr)
+        return SPI_ReceiveData(this->spi);
 }
 
 #if 0

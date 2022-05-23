@@ -1,7 +1,7 @@
 #ifndef __WY_LIB_CPP_OLED_H__
 #define __WY_LIB_CPP_OLED_H__
 #include "common.h"
-#include "wy_spi.hpp"
+#include "wy_gpio.hpp"
 #include "generalO.hpp"
 #include <stdio.h>
 
@@ -19,23 +19,19 @@ namespace OLED
         void (*transFunc)(uint8_t dat) = nullptr;
         GPIO_TypeDef *DC_Port, *CS_Port, *RES_Port;
         uint16_t DC_Pin, CS_Pin, RES_Pin;
+        GPIO::Gpio_Object *dc = nullptr, *cs = nullptr, *res = nullptr;
 
     public:
         char str[64] = {0};
-        OLED_Object(/* args */) = default;
-        OLED_Object(GPIO_TypeDef *port, uint16_t dc, uint16_t cs, uint16_t res)
+        OLED_Object() = default;
+        OLED_Object(const char *dc, const char *cs, const char *res, void (*f)(uint8_t) = nullptr)
         {
-            this->reInit(port, dc, port, cs, port, res, nullptr);
+            this->cs = new GPIO::Gpio_Object(cs);
+            this->dc = new GPIO::Gpio_Object(dc);
+            this->res = new GPIO::Gpio_Object(res);
+            this->transFunc = f;
+            this->reset();
         }
-        OLED_Object(GPIO_TypeDef *dcPort, uint16_t dcPin,
-                    GPIO_TypeDef *csPort, uint16_t csPin,
-                    GPIO_TypeDef *resPort, uint16_t resPin, void (*f)(uint8_t))
-        {
-            this->reInit(dcPort, dcPin, csPort, csPin, resPort, resPin, f);
-        }
-        void reInit(GPIO_TypeDef *dcPort, uint16_t dcPin,
-                    GPIO_TypeDef *csPort, uint16_t csPin,
-                    GPIO_TypeDef *resPort, uint16_t resPin, void (*f)(uint8_t));
         void loadTransFun(void (*f)(uint8_t)) { this->transFunc = f; }
         void printStr(void) { print(str); }
         void reset(void);

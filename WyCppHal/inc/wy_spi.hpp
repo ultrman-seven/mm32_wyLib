@@ -13,13 +13,10 @@ namespace SPI
 
     class SPI_Object
     {
-    protected:
     private:
-        uint16_t SCLK_Pin, MOSI_Pin, MISO_Pin;
-        GPIO_TypeDef *SCLK_Port, *MOSI_Port, *MISO_Port;
         SPI_TypeDef *spi;
-
         GPIO::Gpio_Object *sclk = nullptr, *mosi = nullptr, *miso = nullptr;
+    protected:
         void init(HardInitStruct *h);
         void init(const char *mosi, const char *miso, const char *sclk);
         void init(char mosiPort, uint8_t mosiPin,
@@ -42,6 +39,7 @@ namespace SPI
             init(mosiPort, mosiPin, misoPort, misoPin, sclkPort, sclkPin);
         }
         void sendOneByte(uint8_t dat);
+        uint8_t read(void);
     };
 
 } // namespace SPI
