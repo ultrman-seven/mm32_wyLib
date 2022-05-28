@@ -1,7 +1,6 @@
 #include "common.h"
 #include "wy_uart.hpp"
-#include "stdio.h"
-// #include <iostream>
+#include "wy_gpio.hpp"
 using namespace UART;
 
 void (*uart1RxFux)(void) = nullptr;
@@ -10,7 +9,6 @@ void (*uart2RxFux)(void) = nullptr;
 UART_Object::UART_Object(InitStruct &s)
 {
     UART_InitTypeDef uart;
-    GPIO_InitTypeDef gpio;
 
     uart.UART_BaudRate = s.bode;
     uart.UART_Mode = UART_Mode_Rx | UART_Mode_Tx;
@@ -37,21 +35,8 @@ UART_Object::UART_Object(InitStruct &s)
     }
     UART_Init(this->uart, &uart);
     UART_Cmd(this->uart, ENABLE);
-
-    uint8_t rxS = pin2pinSource(s.RxPin);
-    uint8_t txS = pin2pinSource(s.TxPin);
-
-    GPIO_PinAFConfig(s.RxPort, rxS, s.RxAF);
-    GPIO_PinAFConfig(s.TxPort, txS, s.TxAF);
-
-    gpio.GPIO_Speed = GPIO_Speed_50MHz;
-    gpio.GPIO_Mode = GPIO_Mode_AF_PP;
-    gpio.GPIO_Pin = s.TxPin;
-    GPIO_Init(s.TxPort, &gpio);
-
-    gpio.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-    gpio.GPIO_Pin = s.RxPin;
-    GPIO_Init(s.RxPort, &gpio);
+    GPIO::afConfig(s.rx, s.RxAF, GPIO_Mode_IN_FLOATING);
+    GPIO::afConfig(s.tx, s.TxAF, GPIO_Mode_AF_PP);
 }
 
 void UART_Object::sendByte(uint8_t dat)
@@ -171,5 +156,14 @@ void UART2_IRQHandler(void)
         if (uart2RxFux != nullptr)
             uart2RxFux();
         UART_ClearITPendingBit(UART2, UART_IT_RXIEN);
+    }
+}
+void UART1_IRQHandler(void)
+{
+    if (UART_GetITStatus(UART1, UART_IT_RXIEN) == SET)
+    {
+        if (uart1RxFux != nullptr)
+            uart1RxFux();
+        UART_ClearITPendingBit(UART1, UART_IT_RXIEN);
     }
 }

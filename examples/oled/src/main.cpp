@@ -1,12 +1,13 @@
-#include "common.h"
+﻿#include "common.h"
 #include "oled.hpp"
 #include "wy_spi.hpp"
 #include "wy_uart.hpp"
 #include "font.hpp"
-#include "wy_8080.hpp"
 #include "wy_gpio.hpp"
 #include <stdio.h>
 #include <vector>
+#include "wy_key.hpp"
+#include "w25q.hpp"
 //#include "Dense"
 
 OLED::OLED_Object *s = nullptr;
@@ -20,7 +21,7 @@ ErrorStatus HSE_SysClock(void)
     if (HSE_StartUpState == SUCCESS)
     {
         RCC_HCLKConfig(RCC_SYSCLK_Div1);
-        RCC_PCLK1Config(RCC_HCLK_Div1);
+        RCC_PCLK1Config(RCC_HCLK_Div2);
         RCC_PCLK2Config(RCC_HCLK_Div1);
         //外部晶振16MHz，6倍频成96MHz
         RCC_PLLConfig(RCC_PLLSource_HSE_Div1, RCC_PLLMul_6);
@@ -33,22 +34,18 @@ ErrorStatus HSE_SysClock(void)
     }
     return HSE_StartUpState;
 }
-
+UART::UART_Object *uart = nullptr;
 void p_re(char ch)
 {
-    s->putChar(ch);
+    // s->putChar(ch);
+    uart->sendByte(ch);
 }
 
 SPI::SPI_Object *spi4Oled = nullptr;
 void spiSend(uint8_t dat)
 {
-    spi4Oled->sendOneByte(dat);
-}
-
-intel8080::Intel8080_Object *i8080_4oled = nullptr;
-void i8080Send(uint8_t dat)
-{
-    i8080_4oled->sendByte(dat);
+    // spi4Oled->sendOneByte(dat);
+    spi4Oled->writeRead(dat);
 }
 
 uint8_t pic[32] = {0};
@@ -69,6 +66,74 @@ void pis_s(void)
     }
     // s->print("\nok ok");
 }
+
+w25q::W25Q *q64 = nullptr;
+uint8_t rxBuf[4096];
+uint16_t secCnt = 0;
+void datTrans(void)
+{
+    // q64->writeSector(secCnt++, rxBuf, 4096);
+    // s->clear();
+    // s->print("ok");
+}
+
+uint32_t chAdd = 0;
+void showChar(void)
+{
+    q64->read(chAdd, pic, 32);
+    chAdd += 32;
+    pis_s();
+}
+
+void printData(void)
+{
+    q64->read(0, rxBuf, 1024);
+    for (size_t i = 0; i < 1024; i++)
+        printf("data %d: 0x%x\r\n", i, rxBuf[i]);
+}
+
+GPIO::Gpio_Object beep("a8");
+void beepFlip(void)
+{
+    beep = !(beep.read());
+}
+
+// u4e00-u9fa5 (中文)
+// (0x3400, 0x4DB5)
+#define ZhStart 0x3400
+#define MidLen 0x19b5
+#define Zh2Start 0x4e00
+uint16_t utf8ToUnicode(const char *c)
+{
+    uint16_t result = 0;
+    uint8_t tmp;
+    result += (uint8_t)c[2] & 0x3f;
+    tmp = (uint8_t)c[1] & 0x3f;
+    result += tmp << 6;
+    tmp = (uint8_t)c[0] & 0x0f;
+    result += tmp << 12;
+    return result;
+}
+void printZh(const char *c)
+{
+    // u16_split zh;
+    uint16_t zh;
+    while (*c != 0)
+    {
+        // zh.unit[1] = *c++;
+        // zh.unit[0] = *c++;
+        zh = utf8ToUnicode(c);
+        printf("0x%x\r\n", zh);
+        c += 3;
+        if (zh - ZhStart > MidLen)
+            q64->read((MidLen + zh - Zh2Start + 1) * 32, pic, 32);
+        else
+            q64->read((zh - ZhStart) * 32, pic, 32);
+        pis_s();
+        // printf("0x%x\r\n", *c++);
+    }
+}
+
 void main(void)
 {
     ErrorStatus e = ERROR;
@@ -76,11 +141,7 @@ void main(void)
     sys::redirect_Printf(p_re);
     delayInit();
 
-    RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
-    RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
-
     SPI::HardInitStruct h;
-
     h.miso = "b15";
     h.mosi = "b13";
     h.sclk = "b14";
@@ -91,43 +152,42 @@ void main(void)
 
     spi4Oled = new SPI::SPI_Object(&h);
     // spi4Oled = new SPI::SPI_Object("b13", "b15", "b14");
-
-    /*i8080_4oled = new intel8080::Intel8080_Object;
-    i8080_4oled->pinStr.dataHigh = false;
-    i8080_4oled->pinStr.dataPort = GPIOA;
-    i8080_4oled->pinStr.rdPort = GPIOC;
-    i8080_4oled->pinStr.wtPort = GPIOC;
-    i8080_4oled->pinStr.rdPin = GPIO_Pin_0;
-    i8080_4oled->pinStr.wtPin = GPIO_Pin_1;
-    i8080_4oled->init();*/
-
     OLED::OLED_Object screen("a12", "b12", "a9", spiSend);
     s = &screen;
-    screen.loadFont(ASCII[0], 16, 8); //装载字体
-    screen.setScreenSize(128, 64);    //设置屏幕分辨率
 
-    screen.clear();
     UART::InitStruct u;
     u.bode = 115200;
     u.uartIdx = 1;
-    u.RxPort = GPIOB;
-    u.RxPin = GPIO_Pin_8;
+    u.rx = "b8";
     u.RxAF = GPIO_AF_0;
-    u.TxPort = GPIOB;
-    u.TxPin = GPIO_Pin_9;
+    u.tx = "b9";
     u.TxAF = GPIO_AF_0;
-    UART::UART_Object computer(u);
-    computer.setDMA((uint32_t)pic, 32, 1, 'r', true, pis_s);
-    // screen.clear();
-    screen.print(e == SUCCESS ? "HSE ok\n" : "HES not ok\n");
-    screen.print("abc");
+    uart = new UART::UART_Object(u);
+    uart->setDMA((uint32_t)rxBuf, 4096, 1, 'r', true, datTrans);
+    // uart->setDMA((uint32_t)pic, 32, 1, 'r', true, pis_s);
+    // uart->setNVIC(1, true, beepFlip);
 
-    GPIO::Gpio_Object led("c9");
+    screen.loadFont(ASCII[0], 16, 8); //装载字体
+    screen.setScreenSize(128, 64);    //设置屏幕分辨率
+    // screen.print(e == SUCCESS ? "HSE ok\n" : "HES not ok\n");
+    // screen.print("abc");
+    spi4Oled = new SPI::SPI_Object(&h);
+    q64 = new w25q::W25Q("c15", spi4Oled);
+    printZh("大家好我是你爹");
+    // printf("\n0x%x", q64->getID());
+    // uint8_t tmp[1024]={0};
+    // for (size_t i = 0; i < 256; i++)
+    // {
+    //     tmp[i] = i;
+    //     tmp[i + 256] = 255 - i;
+    // }
+    // // q64->write(1, tmp, 521);
+    // q64->writeSector(0, tmp, 1024);
+    KEY::KEY_Object k("c10");
+    k.setOption(showChar);
+    KEY::KEY_Object down("a15");
+    down.setOption(printData);
     while (1)
     {
-        led = 0;
-        delayMs(500);
-        led = 1;
-        delayMs(500);
     }
 }

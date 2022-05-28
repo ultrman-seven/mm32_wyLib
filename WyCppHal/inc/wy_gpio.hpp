@@ -7,11 +7,11 @@ namespace GPIO
     class Gpio_Object
     {
     private:
-        uint8_t pin_source;
         uint16_t pin;
-        GPIO_TypeDef *port;
 
     protected:
+        GPIO_TypeDef *port;
+        uint8_t pin_source;
         void familyInit(char port, uint8_t pin, bool rccOn);
         void familyInit(const char *n, bool rccOn);
 
@@ -41,12 +41,18 @@ namespace GPIO
         uint8_t read(void);
     };
 
+    uint8_t getPinFromStr(const char *s);
+    uint8_t getGPIO_Index(const char n);
+    void turnOnRcc(uint8_t index);
+    void turnOnRcc(const char GPIOx);
     void modeConfig(char port, uint8_t pin, GPIOMode_TypeDef m,
-                    GPIOSpeed_TypeDef s = GPIO_Speed_50MHz);
+                    GPIOSpeed_TypeDef s = GPIO_Speed_50MHz, bool rcc = true);
+    void modeConfig(const char *p, GPIOMode_TypeDef m,
+                    GPIOSpeed_TypeDef s = GPIO_Speed_50MHz, bool rcc = true);
     void afConfig(char port, uint8_t pin, uint8_t af, GPIOMode_TypeDef m,
-                  GPIOSpeed_TypeDef s = GPIO_Speed_50MHz);
+                  GPIOSpeed_TypeDef s = GPIO_Speed_50MHz, bool rcc = true);
     void afConfig(const char *g, uint8_t af, GPIOMode_TypeDef m,
-                  GPIOSpeed_TypeDef s = GPIO_Speed_50MHz);
+                  GPIOSpeed_TypeDef s = GPIO_Speed_50MHz, bool rcc = true);
 } // namespace GPIO
 
 #endif /* FD25E189_CD54_4550_BCB3_29427BBA5968 */

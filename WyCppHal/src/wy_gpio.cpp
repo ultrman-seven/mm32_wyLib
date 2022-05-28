@@ -3,17 +3,6 @@ using namespace GPIO;
 const uint32_t gpios[] = {GPIOA_BASE, GPIOB_BASE, GPIOC_BASE, GPIOD_BASE};
 const uint32_t gpio_rccs[] = {RCC_AHBPeriph_GPIOA, RCC_AHBPeriph_GPIOB, RCC_AHBPeriph_GPIOC, RCC_AHBPeriph_GPIOD};
 
-uint8_t getPinFromStr(const char *s)
-{
-    uint8_t result = 0;
-    while (*s)
-    {
-        result *= 10;
-        result += *s++ - '0';
-    }
-    return result;
-}
-
 void Gpio_Object::familyInit(char port, uint8_t pin, bool rccOn)
 {
     uint8_t tmp;
@@ -70,47 +59,78 @@ uint8_t Gpio_Object::read(void)
 
 namespace GPIO
 {
-    void modeConfig(char port, uint8_t pin, GPIOMode_TypeDef m, GPIOSpeed_TypeDef s)
+    void turnOnRcc(uint8_t index)
+    {
+        RCC_AHBPeriphClockCmd(gpio_rccs[index], ENABLE);
+    }
+    void turnOnRcc(const char n)
+    {
+        RCC_AHBPeriphClockCmd(gpio_rccs[getGPIO_Index(n)], ENABLE);
+    }
+    uint8_t getPinFromStr(const char *s)
+    {
+        uint8_t result = 0;
+        while (*s)
+        {
+            result *= 10;
+            result += *s++ - '0';
+        }
+        return result;
+    }
+    uint8_t getGPIO_Index(const char n)
+    {
+        if (n >= 'a' && n <= 'd')
+            return n - 'a';
+        return n - 'A';
+    }
+    void modeConfig(char port, uint8_t pin, GPIOMode_TypeDef m, GPIOSpeed_TypeDef s, bool rcc)
     {
         GPIO_InitTypeDef gpio;
-        uint8_t tmp;
+
         gpio.GPIO_Mode = m;
         gpio.GPIO_Pin = 0x0001 << pin;
         gpio.GPIO_Speed = s;
-        if (port >= 'a' && port <= 'd')
-            tmp = port - 'a';
-        else if (port >= 'A' && port <= 'D')
-            tmp = port - 'A';
-        GPIO_Init((GPIO_TypeDef *)gpios[tmp], &gpio);
+        uint8_t idx = getGPIO_Index(port);
+        if (rcc)
+            RCC_AHBPeriphClockCmd(gpio_rccs[idx], ENABLE);
+        GPIO_Init((GPIO_TypeDef *)gpios[idx], &gpio);
+    }
+    void modeConfig(const char *p, GPIOMode_TypeDef m, GPIOSpeed_TypeDef s, bool rcc)
+    {
+        GPIO_InitTypeDef gpio;
+
+        gpio.GPIO_Mode = m;
+        gpio.GPIO_Pin = 0x0001 << getPinFromStr(p + 1);
+        gpio.GPIO_Speed = s;
+        uint8_t idx = getGPIO_Index(*p);
+        if (rcc)
+            RCC_AHBPeriphClockCmd(gpio_rccs[idx], ENABLE);
+        GPIO_Init((GPIO_TypeDef *)gpios[idx], &gpio);
     }
 
-    void afConfig(char port, uint8_t pin, uint8_t af, GPIOMode_TypeDef m, GPIOSpeed_TypeDef s)
+    void afConfig(char port, uint8_t pin, uint8_t af, GPIOMode_TypeDef m, GPIOSpeed_TypeDef s, bool rcc)
     {
         GPIO_InitTypeDef gpio;
-        uint8_t tmp;
+        uint8_t tmp = getGPIO_Index(port);
         gpio.GPIO_Mode = m;
         gpio.GPIO_Pin = 0x0001 << pin;
         gpio.GPIO_Speed = s;
-        if (port >= 'a' && port <= 'd')
-            tmp = port - 'a';
-        else if (port >= 'A' && port <= 'D')
-            tmp = port - 'A';
+        if (rcc)
+            RCC_AHBPeriphClockCmd(gpio_rccs[tmp], ENABLE);
         GPIO_Init((GPIO_TypeDef *)gpios[tmp], &gpio);
         GPIO_PinAFConfig((GPIO_TypeDef *)gpios[tmp], pin, af);
     }
-    void afConfig(const char *g, uint8_t af, GPIOMode_TypeDef m, GPIOSpeed_TypeDef s)
+    void afConfig(const char *g, uint8_t af, GPIOMode_TypeDef m, GPIOSpeed_TypeDef s, bool rcc)
     {
         GPIO_InitTypeDef gpio;
-        uint8_t tmp;
+        uint8_t tmp = getGPIO_Index(*g);
         uint8_t pin = getPinFromStr(g + 1);
+        GPIO_PinAFConfig((GPIO_TypeDef *)gpios[tmp], pin, af);
         gpio.GPIO_Mode = m;
         gpio.GPIO_Pin = 0x0001 << pin;
         gpio.GPIO_Speed = s;
-        if (*g >= 'a' && *g <= 'd')
-            tmp = *g - 'a';
-        else if (*g >= 'A' && *g <= 'D')
-            tmp = *g - 'A';
+        if (rcc)
+            RCC_AHBPeriphClockCmd(gpio_rccs[tmp], ENABLE);
         GPIO_Init((GPIO_TypeDef *)gpios[tmp], &gpio);
-        GPIO_PinAFConfig((GPIO_TypeDef *)gpios[tmp], pin, af);
     }
 }

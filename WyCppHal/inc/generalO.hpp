@@ -9,6 +9,7 @@ namespace genO
     protected:
         const uint8_t *font;
         uint8_t asciiHigh, asciiWide, fontUnitSize;
+        uint8_t zh_High, zh_Wide;
         uint8_t maxWord = 16, maxLine = 4;
         uint8_t line = 0, wordCount = 0;
         virtual void char_display(const uint8_t *ptr_pic, bool contrast, uint8_t l, uint8_t word) = 0;
@@ -20,6 +21,7 @@ namespace genO
 
     private:
         std::vector<std::vector<uint8_t> > placeHolder;
+        uint16_t (*loadZH)(uint32_t add, uint8_t *buf, uint16_t len);
 
     public:
         class // ChooseLine

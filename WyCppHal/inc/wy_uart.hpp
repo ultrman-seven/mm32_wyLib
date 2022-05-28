@@ -6,8 +6,7 @@ namespace UART
     {
         uint32_t bode;
         uint8_t uartIdx;
-        GPIO_TypeDef *RxPort, *TxPort;
-        uint16_t RxPin, TxPin;
+        const char *rx, *tx;
         uint8_t RxAF, TxAF;
         /* data */
     };
@@ -24,18 +23,13 @@ namespace UART
         UART_Object() = default;
         UART_Object(InitStruct &s);
 
-        void setNVIC(void) { setNVIC(1, true, nullptr); }
-        void setNVIC(uint8_t priority) { setNVIC(priority, true, nullptr); }
-        void setNVIC(uint8_t priority, bool open) { setNVIC(priority, open, nullptr); }
-        void setNVIC(uint8_t priority, bool open, void (*f)(void));
+        void setNVIC(uint8_t priority = 1, bool open = true, void (*f)(void) = nullptr);
         void setRxFunction(void (*f)(void)) { *(this->rxFun) = f; };
 
-        void setDMA(uint32_t add, uint16_t size, char mode) { setDMA(add, size, 1, mode, false, nullptr); }
-        void setDMA(uint32_t add, uint16_t size, char mode, bool interrupt) { setDMA(add, size, 1, mode, interrupt, nullptr); }
-        void setDMA(uint32_t add, uint16_t size, uint8_t priority, char mode, bool interrupt) { setDMA(add, size, priority, mode, interrupt, nullptr); }
-        void setDMA(uint32_t add, uint16_t size, uint8_t priority, char mode, bool interrupt, void (*f)(void));
+        void setDMA(uint32_t add, uint16_t size, uint8_t priority = 1,
+                    char mode = 'r', bool interrupt = false, void (*f)(void) = nullptr);
         void setDMA_InterruptFunction(void (*f)(void));
-        void DMA_On(bool set) {DMA_Cmd(this->dmaChannel, set ? ENABLE : DISABLE); }
+        void DMA_On(bool set) { DMA_Cmd(this->dmaChannel, set ? ENABLE : DISABLE); }
 
         void sendByte(uint8_t dat);
         void sendByte(uint8_t *dat, uint8_t len);

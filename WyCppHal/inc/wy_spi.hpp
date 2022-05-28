@@ -16,6 +16,7 @@ namespace SPI
     private:
         SPI_TypeDef *spi;
         GPIO::Gpio_Object *sclk = nullptr, *mosi = nullptr, *miso = nullptr;
+
     protected:
         void init(HardInitStruct *h);
         void init(const char *mosi, const char *miso, const char *sclk);
@@ -24,8 +25,6 @@ namespace SPI
                   char sclkPort, uint8_t sclkPin);
 
     public:
-        // template <typename DataType>
-        // void sendData(DataType dat);
         SPI_Object(/* args */) = default;
         SPI_Object(HardInitStruct *h) { init(h); };
         SPI_Object(const char *mosi, const char *miso, const char *sclk)
@@ -40,6 +39,9 @@ namespace SPI
         }
         void sendOneByte(uint8_t dat);
         uint8_t read(void);
+        // template <typename DataType>
+        // void sendData(DataType dat);
+        uint32_t writeRead(uint8_t dat = 0xff);
     };
 
 } // namespace SPI

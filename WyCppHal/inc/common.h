@@ -6,6 +6,33 @@
 #define __weak __attribute__((weak))
 // #include "system_MM32SPIN2xx_p.h"
 
+union u64_split
+{
+    uint64_t val;
+    uint8_t unit[8];
+};
+union u32_split
+{
+    uint32_t val;
+    uint8_t unit[4];
+};
+
+union u16_split
+{
+    uint16_t val;
+    uint8_t unit[2];
+};
+union float_split
+{
+    float val;
+    uint8_t unit[4];
+};
+union double_split
+{
+    double val;
+    uint8_t unit[8];
+};
+
 void delay(__IO uint32_t time);
 void delayInit(void);
 void delayMs(uint32_t time);

@@ -1,40 +1,27 @@
-#include "common.h"
-
-namespace KEY
-{
-    class KEY_Object
-    {
-    private:
-        GPIO_TypeDef *port;
-        uint16_t pin;
-
-    public:
-        KEY_Object() = default;
-        KEY_Object(GPIO_TypeDef *port, uint16_t pin) { KEY_Object(port, pin, true, 0); };
-        KEY_Object(GPIO_TypeDef *port, uint16_t pin, bool interrupt, uint8_t p);
-    };
-
-} // namespace KEY
-
+#include "wy_key.hpp"
 using namespace KEY;
 
 void (*extiCallback[16])(void) = {nullptr};
 
-KEY_Object::KEY_Object(GPIO_TypeDef *port, uint16_t pin, bool interrupt, uint8_t p)
+void KEY_Object::setOption(void (*callback)(void))
 {
-    this->port = port;
-    this->pin = pin;
-    uint8_t p_s = pin2pinSource(pin);
+    extiCallback[this->pin_source] = callback;
+}
 
+KEY_Object::KEY_Object(const char *n, bool interrupt, uint8_t p)
+{
+    //this->familyInit(n, true);
+    GPIO::turnOnRcc(*n);
+    GPIO::modeConfig(n, GPIO_Mode_IPU);
+    this->pin_source = GPIO::getPinFromStr(n + 1);
     if (interrupt)
     {
         RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
-        uint16_t gpio_s = (uint32_t)(this->port) & 0xffff;
-        SYSCFG_EXTILineConfig(gpio_s / 0x400, p_s);
+        SYSCFG_EXTILineConfig(GPIO::getGPIO_Index(*n), this->pin_source);
 
         NVIC_InitTypeDef nvic;
         EXTI_InitTypeDef exti;
-        switch (p_s)
+        switch (this->pin_source)
         {
         case 0:
         case 1:
@@ -65,7 +52,7 @@ KEY_Object::KEY_Object(GPIO_TypeDef *port, uint16_t pin, bool interrupt, uint8_t
         nvic.NVIC_IRQChannelCmd = ENABLE;
         nvic.NVIC_IRQChannelPriority = p;
         NVIC_Init(&nvic);
-        exti.EXTI_Line = this->pin;
+        exti.EXTI_Line = 0x0001 << (this->pin_source);
         exti.EXTI_LineCmd = ENABLE;
         exti.EXTI_Mode = EXTI_Mode_Interrupt;
         exti.EXTI_Trigger = EXTI_Trigger_Falling;

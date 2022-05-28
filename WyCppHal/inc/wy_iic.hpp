@@ -2,6 +2,8 @@
 #define __WY_LIB_CPP_IIC_HPP__
 #include "common.h"
 #include "vector"
+#include "wy_gpio.hpp"
+
 namespace IIC
 {
     class IIC_Object
@@ -9,6 +11,7 @@ namespace IIC
     private:
         GPIO_TypeDef *sda_port, *scl_port;
         uint16_t sda_pin, scl_pin;
+        GPIO::Gpio_Object *sda, *scl;
         uint32_t *CR;
         uint32_t CR_clear, mode_in, mode_out;
 
