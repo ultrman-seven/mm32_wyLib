@@ -1,7 +1,23 @@
 #include "common.h"
 #include "generalO.hpp"
+#include "stdlib.h"
+#include "stdio.h"
 using namespace genO;
 
+uint16_t utf8ToUnicode(uint8_t *c)
+{
+    uint16_t result = 0;
+    uint8_t tmp;
+    result += c[2] & 0x3f;
+    tmp = c[1] & 0x3f;
+    result += tmp << 6;
+    tmp = c[0] & 0x0f;
+    result += tmp << 12;
+    return result;
+}
+#define ZhStart 0x3400
+#define MidLen 0x19b5
+#define Zh2Start 0x4e00
 void generalOutputBase::putChar(char ch)
 {
     if (wordCount >= maxWord)
@@ -11,6 +27,32 @@ void generalOutputBase::putChar(char ch)
     }
     if (line >= maxLine)
         return;
+    if (this->zhCnt)
+    {
+        this->zhBuf[this->zhCnt++] = (uint8_t)ch;
+        if (this->zhCnt == 3)
+        {
+            this->zhCnt = 0;
+            uint16_t zh = utf8ToUnicode(this->zhBuf);
+            uint8_t zhSize = zh_High * zh_Wide / 8;
+            uint8_t *pic = (uint8_t *)calloc(zhSize, sizeof(uint8_t));
+            if (zh - ZhStart > MidLen)
+                this->loadZH((MidLen + zh - Zh2Start + 1) * zhSize, pic, zhSize);
+            else
+                this->loadZH((zh - ZhStart) * zhSize, pic, zhSize);
+            char_display(pic, chooseLine == line, this->line, this->wordCount, zh_High, zh_Wide);
+            printf("wordCount: %d\r\n", wordCount);
+            this->wordCount+=2;
+            free(pic);
+        }
+        return;
+    }
+    if (((uint8_t)ch & 0xf0) == 0xe0)
+    {
+        if (this->loadZH != nullptr)
+            this->zhBuf[this->zhCnt++] = (uint8_t)ch;
+        return;
+    }
     switch (ch)
     {
     case '\n':
@@ -19,7 +61,8 @@ void generalOutputBase::putChar(char ch)
         return;
     case '\b':
         wordCount--;
-        break;
+        char_display(font, chooseLine == line);
+        return;
     case '\a':
         char_display(font, chooseLine == line);
         (this->placeHolder)[line / (asciiHigh / 8)].push_back(wordCount);
@@ -31,6 +74,7 @@ void generalOutputBase::putChar(char ch)
             char_display(font + fontUnitSize * (ch - 32), chooseLine == line);
         break;
     }
+    printf("wordCount: %d\r\n", wordCount);
     wordCount++;
 }
 
@@ -81,6 +125,13 @@ void generalOutputBase::loadFont(const uint8_t *font, uint8_t asciiHigh, uint8_t
     this->chooseLine.setStep(asciiHigh / 8);
 }
 
+void generalOutputBase::loadZH_Font(void (*f)(uint32_t add, uint8_t *buf, uint16_t len), uint8_t h, uint8_t w)
+{
+    this->loadZH = f;
+    this->zh_High = h;
+    this->zh_Wide = w;
+}
+
 void generalOutputBase::setScreenSize(uint8_t width, uint8_t height)
 {
     maxWord = width / asciiWide;
@@ -101,10 +152,10 @@ void generalOutputBase::clearPlaceHolder(void)
 void generalOutputBase::placeFill(char *s)
 {
     uint8_t l = 0;
-    while (l <= maxLine/(asciiHigh / 8))
+    while (l <= maxLine / (asciiHigh / 8))
     {
         for (auto w : (this->placeHolder[l]))
-            char_display(font + fontUnitSize * (*s++ - 32), chooseLine == line, l*(asciiHigh / 8), w);
-        l ++;
+            char_display(font + fontUnitSize * (*s++ - 32), chooseLine == line, l * (asciiHigh / 8), w);
+        l++;
     }
 }

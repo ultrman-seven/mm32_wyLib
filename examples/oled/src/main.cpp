@@ -85,11 +85,9 @@ void showChar(void)
     pis_s();
 }
 
-void printData(void)
+void getZH(uint32_t add,uint8_t*buf,uint16_t len)
 {
-    q64->read(0, rxBuf, 1024);
-    for (size_t i = 0; i < 1024; i++)
-        printf("data %d: 0x%x\r\n", i, rxBuf[i]);
+    q64->read(add, buf, len);
 }
 
 GPIO::Gpio_Object beep("a8");
@@ -100,39 +98,39 @@ void beepFlip(void)
 
 // u4e00-u9fa5 (中文)
 // (0x3400, 0x4DB5)
-#define ZhStart 0x3400
-#define MidLen 0x19b5
-#define Zh2Start 0x4e00
-uint16_t utf8ToUnicode(const char *c)
-{
-    uint16_t result = 0;
-    uint8_t tmp;
-    result += (uint8_t)c[2] & 0x3f;
-    tmp = (uint8_t)c[1] & 0x3f;
-    result += tmp << 6;
-    tmp = (uint8_t)c[0] & 0x0f;
-    result += tmp << 12;
-    return result;
-}
-void printZh(const char *c)
-{
-    // u16_split zh;
-    uint16_t zh;
-    while (*c != 0)
-    {
-        // zh.unit[1] = *c++;
-        // zh.unit[0] = *c++;
-        zh = utf8ToUnicode(c);
-        printf("0x%x\r\n", zh);
-        c += 3;
-        if (zh - ZhStart > MidLen)
-            q64->read((MidLen + zh - Zh2Start + 1) * 32, pic, 32);
-        else
-            q64->read((zh - ZhStart) * 32, pic, 32);
-        pis_s();
-        // printf("0x%x\r\n", *c++);
-    }
-}
+// #define ZhStart 0x3400
+// #define MidLen 0x19b5
+// #define Zh2Start 0x4e00
+// uint16_t utf8ToUnicode(const char *c)
+// {
+//     uint16_t result = 0;
+//     uint8_t tmp;
+//     result += (uint8_t)c[2] & 0x3f;
+//     tmp = (uint8_t)c[1] & 0x3f;
+//     result += tmp << 6;
+//     tmp = (uint8_t)c[0] & 0x0f;
+//     result += tmp << 12;
+//     return result;
+// }
+// void printZh(const char *c)
+// {
+//     // u16_split zh;
+//     uint16_t zh;
+//     while (*c != 0)
+//     {
+//         // zh.unit[1] = *c++;
+//         // zh.unit[0] = *c++;
+//         zh = utf8ToUnicode(c);
+//         printf("0x%x\r\n", zh);
+//         c += 3;
+//         if (zh - ZhStart > MidLen)
+//             q64->read((MidLen + zh - Zh2Start + 1) * 32, pic, 32);
+//         else
+//             q64->read((zh - ZhStart) * 32, pic, 32);
+//         pis_s();
+//         // printf("0x%x\r\n", *c++);
+//     }
+// }
 
 void main(void)
 {
@@ -173,8 +171,10 @@ void main(void)
     // screen.print("abc");
     spi4Oled = new SPI::SPI_Object(&h);
     q64 = new w25q::W25Q("c15", spi4Oled);
-    printZh("大家好我是你爹");
-    // printf("\n0x%x", q64->getID());
+    screen.loadZH_Font(getZH, 16, 16);
+    screen.print("我1是2你3爹4\n润");
+    // printZh("大家好我是你爹");
+    printf("\n0x%x", q64->getID());
     // uint8_t tmp[1024]={0};
     // for (size_t i = 0; i < 256; i++)
     // {
@@ -186,7 +186,7 @@ void main(void)
     KEY::KEY_Object k("c10");
     k.setOption(showChar);
     KEY::KEY_Object down("a15");
-    down.setOption(printData);
+    // down.setOption(printData);
     while (1)
     {
     }

@@ -15,7 +15,8 @@ namespace OLED
         void sendByte(uint8_t dat, bool isCMD);
         void setCol(uint8_t col);
         void setPage(uint8_t page);
-        void char_display(const uint8_t *ptr_pic, bool contrast, uint8_t l, uint8_t word);
+        void char_display(const uint8_t *ptr_pic, bool contrast, uint8_t l, uint8_t word,uint8_t h,uint8_t w);
+        void char_display(uint8_t *ptr_pic, bool contrast, uint8_t l, uint8_t word,uint8_t h,uint8_t w);
         void (*transFunc)(uint8_t dat) = nullptr;
         GPIO_TypeDef *DC_Port, *CS_Port, *RES_Port;
         uint16_t DC_Pin, CS_Pin, RES_Pin;

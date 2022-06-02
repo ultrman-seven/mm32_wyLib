@@ -12,16 +12,23 @@ namespace genO
         uint8_t zh_High, zh_Wide;
         uint8_t maxWord = 16, maxLine = 4;
         uint8_t line = 0, wordCount = 0;
-        virtual void char_display(const uint8_t *ptr_pic, bool contrast, uint8_t l, uint8_t word) = 0;
+        virtual void char_display(const uint8_t *ptr_pic, bool contrast, uint8_t l, uint8_t word, uint8_t h, uint8_t w) = 0;
+        virtual void char_display(uint8_t *ptr_pic, bool contrast, uint8_t l, uint8_t word, uint8_t h, uint8_t w) = 0;
+        void char_display(const uint8_t *ptr_pic, bool contrast, uint8_t l, uint8_t word)
+        {
+            char_display(ptr_pic, contrast, l, word, this->asciiHigh, this->asciiWide);
+        }
         void char_display(const uint8_t *ptr_pic, bool contrast)
         {
-            char_display(ptr_pic, contrast, this->line, this->wordCount);
+            char_display(ptr_pic, contrast, this->line, this->wordCount, this->asciiHigh, this->asciiWide);
         }
         void clearPlaceHolder(void);
 
     private:
-        std::vector<std::vector<uint8_t> > placeHolder;
-        uint16_t (*loadZH)(uint32_t add, uint8_t *buf, uint16_t len);
+        std::vector<std::vector<uint8_t>> placeHolder;
+        void (*loadZH)(uint32_t add, uint8_t *buf, uint16_t len);
+        uint8_t zhCnt = 0;
+        uint8_t zhBuf[3];
 
     public:
         class // ChooseLine
@@ -41,6 +48,7 @@ namespace genO
         } chooseLine;
         generalOutputBase() = default;
         void loadFont(const uint8_t *font, uint8_t asciiHigh, uint8_t asciiWide);
+        void loadZH_Font(void (*f)(uint32_t add, uint8_t *buf, uint16_t len), uint8_t h, uint8_t w);
         void setScreenSize(uint8_t width, uint8_t height);
         void putChar(char c);
         void putNum(__IO int num);
