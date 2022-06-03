@@ -1,7 +1,6 @@
 #include "common.h"
 #include "generalO.hpp"
 #include "stdlib.h"
-#include "stdio.h"
 using namespace genO;
 
 uint16_t utf8ToUnicode(uint8_t *c)
@@ -41,7 +40,6 @@ void generalOutputBase::putChar(char ch)
             else
                 this->loadZH((zh - ZhStart) * zhSize, pic, zhSize);
             char_display(pic, chooseLine == line, this->line, this->wordCount, zh_High, zh_Wide);
-            printf("wordCount: %d\r\n", wordCount);
             this->wordCount+=2;
             free(pic);
         }
@@ -74,7 +72,6 @@ void generalOutputBase::putChar(char ch)
             char_display(font + fontUnitSize * (ch - 32), chooseLine == line);
         break;
     }
-    printf("wordCount: %d\r\n", wordCount);
     wordCount++;
 }
 

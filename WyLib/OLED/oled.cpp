@@ -11,21 +11,23 @@ void OLED_Object::sendByte(uint8_t dat, bool isCMD)
     cs->set();
 }
 
+#define Brightness
 void OLED_Object::reset(void)
 {
-    const uint8_t rstCmd[] = {0xAE, 0x02, 0x10, 0x40,
-                        0xB0, 0x81, 0xFF, 0xA1, 0xA4, 0xA6, 0xC8, 0xA8,
-                        0x3F, 0xD5, 0x80, 0xD3, 0x00, 0xAD, 0x8B, 0xDA,
-                        0x12, 0xDB, 0x40, 0xD9, 0xF1, 0xAF};
-    uint8_t cnt;
-    // GPIO_ResetBits(this->RES_Port, this->RES_Pin);
+    // const uint8_t rstCmd[] = {0xAE, 0x02, 0x10, 0x40,
+    //                           0xB0, 0x81, 0xFF, 0xA1, 0xA4, 0xA6, 0xC8, 0xA8,
+    //                           0x3F, 0xD5, 0x80, 0xD3, 0x00, 0xAD, 0x8B, 0xDA,
+    //                           0x12, 0xDB, 0x40, 0xD9, 0xF1, 0xAF};
+    const uint8_t rstCmd[] = {0xae, 0x00, 0x10, 0x40, 0x81,
+                              0x7f, 0xa1, 0xc8, 0xa6, 0xa8, 0x3f, 0xd3,
+                              0x00, 0xd5, 0x80, 0xd9, 0xf1, 0xda, 0x12, 0xdb,
+                              0x40, 0x20, 0x02, 0x8d, 0x14, 0xa4, 0xa6, 0xaf};
     this->cs->set();
     this->res->reset();
     delayMs(100);
     this->res->set();
-    // GPIO_SetBits(this->RES_Port, this->RES_Pin);
-    for (cnt = 0; cnt < 26; cnt++)
-        this->sendByte(rstCmd[cnt], true);
+    for (auto cmd : rstCmd)
+        this->sendByte(cmd, true);
     this->clear();
 }
 
@@ -77,7 +79,7 @@ void OLED_Object::Picture_display(const uint8_t *ptr_pic, uint8_t colStart, uint
     }
 }
 
-void OLED_Object::char_display(const uint8_t *ptr_pic, bool contrast,uint8_t l,uint8_t word ,uint8_t h,uint8_t w)
+void OLED_Object::char_display(const uint8_t *ptr_pic, bool contrast, uint8_t l, uint8_t word, uint8_t h, uint8_t w)
 {
     uint8_t page, column;
     for (page = l; page < l + (h / 8); page++) // page loop
@@ -91,7 +93,7 @@ void OLED_Object::char_display(const uint8_t *ptr_pic, bool contrast,uint8_t l,u
                 this->sendByte(*ptr_pic++, false);
     }
 }
-void OLED_Object::char_display(uint8_t *ptr_pic, bool contrast,uint8_t l,uint8_t word ,uint8_t h,uint8_t w)
+void OLED_Object::char_display(uint8_t *ptr_pic, bool contrast, uint8_t l, uint8_t word, uint8_t h, uint8_t w)
 {
     uint8_t page, column;
     for (page = l; page < l + (h / 8); page++) // page loop

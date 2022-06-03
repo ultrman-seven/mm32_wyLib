@@ -72,7 +72,7 @@ uint8_t rxBuf[4096];
 uint16_t secCnt = 0;
 void datTrans(void)
 {
-    // q64->writeSector(secCnt++, rxBuf, 4096);
+    q64->writeSector(secCnt++, rxBuf, 4096);
     // s->clear();
     // s->print("ok");
 }
@@ -149,7 +149,9 @@ void main(void)
     h.Spi_Num = 2;
 
     spi4Oled = new SPI::SPI_Object(&h);
-    // spi4Oled = new SPI::SPI_Object("b13", "b15", "b14");
+    spi4Oled = new SPI::SPI_Object(&h);
+    q64 = new w25q::W25Q("c15", spi4Oled);
+    // delayMs(100);
     OLED::OLED_Object screen("a12", "b12", "a9", spiSend);
     s = &screen;
 
@@ -161,19 +163,14 @@ void main(void)
     u.tx = "b9";
     u.TxAF = GPIO_AF_0;
     uart = new UART::UART_Object(u);
-    uart->setDMA((uint32_t)rxBuf, 4096, 1, 'r', true, datTrans);
+    // uart->setDMA((uint32_t)rxBuf, 4096, 1, 'r', true, datTrans);
     // uart->setDMA((uint32_t)pic, 32, 1, 'r', true, pis_s);
-    // uart->setNVIC(1, true, beepFlip);
 
     screen.loadFont(ASCII[0], 16, 8); //装载字体
     screen.setScreenSize(128, 64);    //设置屏幕分辨率
-    // screen.print(e == SUCCESS ? "HSE ok\n" : "HES not ok\n");
-    // screen.print("abc");
-    spi4Oled = new SPI::SPI_Object(&h);
-    q64 = new w25q::W25Q("c15", spi4Oled);
+    screen.print(e == SUCCESS ? "HSE ok\n" : "HES not ok\n");
     screen.loadZH_Font(getZH, 16, 16);
     screen.print("我1是2你3爹4\n润");
-    // printZh("大家好我是你爹");
     printf("\n0x%x", q64->getID());
     // uint8_t tmp[1024]={0};
     // for (size_t i = 0; i < 256; i++)
@@ -186,7 +183,6 @@ void main(void)
     KEY::KEY_Object k("c10");
     k.setOption(showChar);
     KEY::KEY_Object down("a15");
-    // down.setOption(printData);
     while (1)
     {
     }

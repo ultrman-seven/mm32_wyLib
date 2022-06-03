@@ -20,7 +20,7 @@ namespace w25q
 
     public:
         W25Q() = default;
-        W25Q(const char *cs, SPI::SPI_Object *s = nullptr)
+        W25Q(const char *cs, SPI::SPI_Object *&s)
         {
             this->cs = new GPIO::Gpio_Object(cs);
             this->cs->set();
